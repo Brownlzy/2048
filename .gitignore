@@ -52,3 +52,7 @@ compile_commands.json
 *creator.user*
 
 *_qmlcache.qrc
+
+/.vs/2048
+/2048Game/x64/Debug
+/x64/Debug
