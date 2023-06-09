@@ -14,7 +14,7 @@ public:
 	virtual std::vector<int> getPoint3()=0;
 	virtual int getValue()=0;
 };
-class MoveTo :protected Operate {
+class MoveTo :public Operate {
 public:
 	MoveTo(int fx,int fy,int tx,int ty,int value) 
 		:Operate(std::vector<int>{ fx,fy,tx,ty,value }){}
@@ -26,7 +26,7 @@ public:
 		return MOVE;
 	}
 };
-class MergeTo :protected Operate {
+class MergeTo :public Operate {
 public:
 	MergeTo(int x1,int y1,int x2,int y2,int dx,int dy,int value)
 		:Operate(std::vector<int>{ x1,y1,x2,y2,dx,dy,value }){}
@@ -38,7 +38,7 @@ public:
 		return MERGE;
 	}
 };
-class NewIn :protected Operate {
+class NewIn :public Operate {
 public:
 	NewIn(int x,int y,int value)
 		:Operate(std::vector<int>{ x,y,value }){}

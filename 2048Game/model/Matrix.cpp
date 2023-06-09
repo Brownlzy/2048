@@ -66,8 +66,6 @@ void Matrix::setLineOnY(int y, const int* values)
 
 int* Matrix::getLineOn(Direction d, int no)
 {
-	if (line != nullptr)
-		delete[] line;
 	switch (d)
 	{
 	case UP:
