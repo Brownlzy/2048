@@ -46,30 +46,22 @@ void Matrix::setNumberIn(int x, int y, const int value)
 
 int* Matrix::getLineOnX(int x)
 {
-	return matrix[x];
+	return getLineOn(LEFT,x);
 }
 
 void Matrix::setLineOnX(int x, const int* values)
 {
-	for (int i = 0; i < 4; i++) {
-		matrix[x][i]=values[i];
-	}
+	setLineOn(LEFT, x, values);
 }
 
 int* Matrix::getLineOnY(int y)
 {
-	int linex[4];
-	for (int i = 0; i < 4; i++) {
-		linex[i] = matrix[i][y];
-	}
-	return linex;
+	return getLineOn(UP, y);
 }
 
 void Matrix::setLineOnY(int y, const int* values)
 {
-	for (int i = 0; i < 4; i++) {
-		matrix[i][y]=values[i];
-	}
+	setLineOn(UP, y, values);
 }
 
 int* Matrix::getLineOn(Direction d, int no)
@@ -78,25 +70,25 @@ int* Matrix::getLineOn(Direction d, int no)
 		delete[] line;
 	switch (d)
 	{
-	case Matrix::UP:
+	case UP:
 		line = new int[4];
 		for (int i = 0; i < 4; i++) {
 			line[i] = matrix[i][no];
 		}
 		return line;
-	case Matrix::DOWN:
+	case DOWN:
 		line = new int[4];
 		for (int i = 0; i < 4; i++) {
 			line[i] = matrix[3-i][no];
 		}
 		return line;
-	case Matrix::RIGHT:
+	case RIGHT:
 		line = new int[4];
 		for (int i = 0; i < 4; i++) {
 			line[i] = matrix[no][3-i];
 		}
 		return line;
-	case Matrix::LEFT:
+	case LEFT:
 		line = new int[4];
 		for (int i = 0; i < 4; i++) {
 			line[i] = matrix[no][i];
@@ -111,22 +103,22 @@ void Matrix::setLineOn(Direction d, int no, const int* values)
 {
 	switch (d)
 	{
-	case Matrix::UP:
+	case UP:
 		for (int i = 0; i < 4; i++) {
 			matrix[i][no] = values[i];
 		}
 		break;
-	case Matrix::DOWN:
+	case DOWN:
 		for (int i = 0; i < 4; i++) {
 		matrix[3 - i][no] =	line[i];
 		}
 		break;
-	case Matrix::RIGHT:
+	case RIGHT:
 		for (int i = 0; i < 4; i++) {
 		matrix[no][3 - i] = line[i];
 		}
 		break;
-	case Matrix::LEFT:
+	case LEFT:
 		for (int i = 0; i < 4; i++) {
 		matrix[no][i] = line[i];
 		}
