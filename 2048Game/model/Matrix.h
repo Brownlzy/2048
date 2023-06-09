@@ -1,9 +1,11 @@
 #pragma once
 #include <QString>
+#include "enmu.h"
 class Matrix
 {
 private:
     int matrix[4][4];
+    int* line=nullptr;
 public:
     Matrix();
     Matrix(const Matrix& ma);
@@ -18,6 +20,9 @@ public:
     /*获得位于y行的方块值(0为空)*/
     int* getLineOnY(int y);
     void setLineOnY(int y,const int* values);
+
+    int* getLineOn(Direction d,int no);
+    void setLineOn(Direction d, int no,const int* values);
 
     void printToConsole();
     void printToConsole(QString title);
