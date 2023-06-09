@@ -83,9 +83,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="controller\MainControl.cpp" />
+    <ClCompile Include="controller\Move.cpp" />
+    <ClCompile Include="gui\Board.cpp" />
+    <ClCompile Include="gui\Number.cpp" />
     <ClCompile Include="model\Matrix.cpp" />
+    <ClCompile Include="model\OperateList.cpp" />
     <None Include="README.md" />
     <QtRcc Include="GameWindow.qrc" />
+    <QtRcc Include="gui\GameWindow.qrc" />
+    <QtUic Include="gui\Board.ui" />
     <QtUic Include="gui\GameWindow.ui" />
     <QtMoc Include="gui\GameWindow.h" />
     <ClCompile Include="gui\GameWindow.cpp" />
@@ -96,6 +103,12 @@
   <ItemGroup>
     <ClInclude Include="abstract\ControllListener.h" />
     <ClInclude Include="abstract\GameUI.h" />
+    <ClInclude Include="controller\MainControl.h" />
+    <ClInclude Include="controller\Move.h" />
+    <ClInclude Include="model\enmu.h" />
+    <ClInclude Include="model\OperateList.h" />
+    <QtMoc Include="gui\Board.h" />
+    <QtMoc Include="gui\Number.h" />
     <ClInclude Include="model\Matrix.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
