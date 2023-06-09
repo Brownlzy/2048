@@ -21,7 +21,7 @@ public:
 	std::vector<int> getPoint1() { return std::vector<int>{vec.at(0),vec.at(1) }; }
 	std::vector<int> getPoint2() { return std::vector<int>{vec.at(2),vec.at(3) }; }
 	std::vector<int> getPoint3() { return std::vector<int>{0,0};}
-	int getValue() { return vec.at(4); };
+	int getValue() { return vec.at(4); }
 	OperateMethod getMethod() {
 		return MOVE;
 	}
@@ -33,7 +33,7 @@ public:
 	std::vector<int> getPoint1() { return std::vector<int>{vec.at(0), vec.at(1) }; }
 	std::vector<int> getPoint2() { return std::vector<int>{vec.at(2), vec.at(3) }; }
 	std::vector<int> getPoint3() { return std::vector<int>{vec.at(4), vec.at(5) }; }
-	int getValue() { return vec.at(6); };
+	int getValue() { return vec.at(6); }
 	OperateMethod getMethod() {
 		return MERGE;
 	}
@@ -45,7 +45,7 @@ public:
 	std::vector<int> getPoint1() { return std::vector<int>{vec.at(0), vec.at(1) }; }
 	std::vector<int> getPoint2() { return std::vector<int>{0, 0}; }
 	std::vector<int> getPoint3() { return std::vector<int>{0, 0}; }
-	int getValue() { return vec.at(2); };
+	int getValue() { return vec.at(2); }
 	OperateMethod getMethod() {
 		return NEW;
 	}

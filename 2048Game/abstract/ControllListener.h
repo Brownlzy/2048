@@ -1,6 +1,6 @@
 #pragma once
-    enum ArrowControl { UP, DOWN, LEFT, RIGHT };
-    enum FuncControl { START, END };
+enum ArrowControl { UP, DOWN, LEFT, RIGHT };
+enum FuncControl { START, END };
 class ControllListener
 {
 public:
