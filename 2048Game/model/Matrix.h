@@ -7,6 +7,7 @@ private:
 public:
     Matrix();
     Matrix(const Matrix& ma);
+    Matrix(int matrix1[4][4]);
     ~Matrix();
     /*获得位于(x,y)处的方块值(0为空)*/
     int getNumberIn(int x, int y);

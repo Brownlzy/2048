@@ -19,6 +19,15 @@ Matrix::Matrix(const Matrix& ma)
 	}
 }
 
+Matrix::Matrix(int array[4][4])
+{
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			matrix[i][j] = array[i][j];
+		}
+	}
+}
+
 Matrix::~Matrix()
 {
 }
@@ -64,6 +73,7 @@ void Matrix::setLineOnY(int y, const int* values)
 void Matrix::printToConsole()
 {
 	QString line;
+	qDebug() << "";
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			line.append(QString::number(matrix[i][j])+"\t\t");
