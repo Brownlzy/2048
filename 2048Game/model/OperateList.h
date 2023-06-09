@@ -58,5 +58,6 @@ private:
 public:
 	void clear();
 	void addOperate(Operate* p);
+	int getCount();
 };
 

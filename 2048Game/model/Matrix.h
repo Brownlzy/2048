@@ -1,5 +1,6 @@
 #pragma once
 #include <QString>
+#include "enmu.h"
 class Matrix
 {
 private:
@@ -10,7 +11,6 @@ public:
     Matrix(const Matrix& ma);
     Matrix(int matrix1[4][4]);
     ~Matrix();
-    enum Direction{UP,DOWN,RIGHT,LEFT};
     /*获得位于(x,y)处的方块值(0为空)*/
     int getNumberIn(int x, int y);
     void setNumberIn(int x, int y,const int value);
