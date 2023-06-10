@@ -134,7 +134,8 @@ void GameWindow::about()
 
 void GameWindow::closeEvent(QCloseEvent* event)
 {
-    if (QMessageBox::No == QMessageBox::question(this, "2048", "确定要提前结束游戏并退出吗？", QMessageBox::Yes, QMessageBox::No))
+    if (state==GAMING&&
+        QMessageBox::No == QMessageBox::question(this, "2048", "确定要提前结束游戏并退出吗？", QMessageBox::Yes, QMessageBox::No))
     {
         event->ignore();
     }
