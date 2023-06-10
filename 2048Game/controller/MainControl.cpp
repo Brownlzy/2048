@@ -84,3 +84,96 @@ void MainControl::onFuncControl(FuncControl control) {
 		records.insert(std::pair<int, int>(round, score));
 }
 
+std::map<int, int> MainControl::readMapFromFile(const std::string& filename)
+{
+	std::map<int, int> data;
+
+	//打开文件
+	std::ifstream file(filename);
+
+	if (!file) {
+		std::cerr << "Failed to open the file.\n";
+		return data;
+	}
+	std::string line;//读取一行数据
+	while (std::getline(file, line)) {
+		std::istringstream iss(line);
+		int key, value;
+		if (!(iss >> key >> value)) {
+			std::cerr << "Failed to parse line: " << line << '\n';
+			continue;
+		}
+
+		data[key] = value;
+	}
+	return std::map<int, int>();
+}
+
+void MainControl::writeRecordsToFile(const std::map<int, int>& data, const std::string& filename)
+{
+	// 打开文件
+	std::ofstream file(filename, std::ios::app);
+
+	// 判断能否成功打开
+	if (!file.is_open()) {
+		std::cerr << "Unable to open file: " << filename << std::endl;
+		return;
+	}
+
+	// 将数据写入文本文件中
+	for (const auto& pair : data) {
+		file << pair.first << ' ' << pair.second << '\n';
+	}
+
+	//关闭文件
+	file.close();
+
+}
+
+void MainControl::writeRecordsToFile(const std::map<int, double>& data, const std::string& filename)
+{
+	// 打开文件
+	std::ofstream file(filename, std::ios::app);
+
+	// 判断能否成功打开
+	if (!file.is_open()) {
+		std::cerr << "Unable to open file: " << filename << std::endl;
+		return;
+	}
+
+	// 将数据写入文本文件中
+	for (const auto& pair : data) {
+		file << pair.first << ' ' << pair.second << '\n';
+	}
+	file << "=========================================================================================" << '\n';
+
+	//关闭文件
+	file.close();
+
+}
+
+void MainControl::sum()
+{
+	
+	if (records.empty()) {
+		std::cout << "The map is empty.\n";
+		return;
+	}
+
+	int max_value = 0;
+	double sum = 0.0;
+
+	for (const auto& pair : records) {
+		if (pair.second > max_value) {
+			max_value = pair.second;
+		}
+		sum += pair.second;
+	}
+	double average = sum / records.size();
+
+	std::map<int, double> result = { {max_value,average} };
+
+	writeRecordsToFile(result, "map.txt");
+	
+}
+
