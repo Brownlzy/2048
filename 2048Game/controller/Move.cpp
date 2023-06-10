@@ -1,7 +1,8 @@
 #include "Move.h"
 
-OperateList* Move::move(Direction direction,Matrix *matrix,int *score)
+OperateList* Move::move(Direction direction,Matrix *matrix,int *score,bool *isNew)
 {
+    *isNew=false;
     OperateList* oplist=new OperateList();
         for (int no = 0; no < 4; no++) 
         {
@@ -26,15 +27,19 @@ OperateList* Move::move(Direction direction,Matrix *matrix,int *score)
                     {
                     case UP:
                         oplist->addOperate(new MergeTo( j,no,  k,no,  i,no, temp));
+                        *isNew = true;
                         break;
                     case LEFT:
                         oplist->addOperate(new MergeTo(no, j, no,k,  no, i, temp));
+                        *isNew = true;
                         break;
                     case RIGHT:
                         oplist->addOperate(new MergeTo( no,3-j, no,3-k,  no,3-i,  temp));
+                        *isNew = true;
                         break;
                     case DOWN:
                         oplist->addOperate(new MergeTo(3-j,no, 3-k, no,  3- i,no, temp));
+                        *isNew = true;
                         break;
                     default:
                         break;
@@ -49,15 +54,23 @@ OperateList* Move::move(Direction direction,Matrix *matrix,int *score)
                     {
                     case UP:
                     oplist->addOperate(new MoveTo( j,no, i,no,  temp));
+                    if (j!=i)
+                    *isNew = true;
                         break;
                     case LEFT:
                     oplist->addOperate(new MoveTo( no,j, no,i,  temp));
+                    if (j != i)
+                    *isNew = true;
                         break;
                     case DOWN:
                     oplist->addOperate(new MoveTo( 3-j,no, 3-i, no, temp));
+                    if ((3-j )!= (3-i))
+                    *isNew = true;
                         break;
                     case RIGHT:
                     oplist->addOperate(new MoveTo( no,3-j,  no,3-i, temp));
+                    if ((3 - j) != (3 - i))
+                    *isNew = true;
                         break;
                     default:
                         break;

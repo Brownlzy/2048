@@ -23,8 +23,6 @@ Board::~Board()
 
 void Board::initView()
 {
-	QRect qr(0, 0, 360, 360);
-	ui.boardGrid->setGeometry(qr);
 	numbers = new Number ** [4];
 	for (int i = 0; i < 4; i++) {
 		numbers[i] = new Number*[4];
@@ -81,7 +79,6 @@ void Board::operate3(OperateList* opl) {
 	opl->~OperateList();
 	setNowMatrix(matrix);
 	animating = false;
-	qDebug() << "=========================================";
 }
 
 //void Board::deleteAnimations()

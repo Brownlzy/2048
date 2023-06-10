@@ -5,6 +5,7 @@
 #include "../abstract/GameUI.h"
 #include "Board.h"
 #include <QKeyEvent>
+#include <QCloseEvent>
 
 class GameWindow : public QMainWindow , public GameUI
 {
@@ -26,6 +27,7 @@ private:
     Ui::GameWindowClass ui;
     Board* board;
     Matrix* matrix;
+    GameState state=FAILED;
     int nowLevel = 1;
     int nowScore = 0;
     int avgScore = 0;
@@ -41,4 +43,9 @@ private:
 
 public slots:
     void keyPressEvent(QKeyEvent* e);
+    void newGame();
+    void endGame();
+    void quit();
+    void about();
+    void closeEvent(QCloseEvent* event);
 };

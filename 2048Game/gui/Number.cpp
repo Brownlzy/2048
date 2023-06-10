@@ -12,7 +12,7 @@ Number::Number(QWidget *parent)
 Number::Number(QWidget *parent,int x,int y, int width, int height, int value)
 	: QLabel(parent)
 {
-	qDebug() << x << y << width << height << value;
+	//qDebug() << x << y << width << height << value;
 	setGeometry(x,y,width,height);
 	setValue(value);
 	setAlignment(Qt::AlignCenter);

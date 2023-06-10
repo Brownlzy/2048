@@ -8,7 +8,7 @@
 #include <QPropertyAnimation>
 #include <vector>
 
-#define ANIMATION_DURATION 200
+#define ANIMATION_DURATION 100
 
 class Board : public QWidget
 {

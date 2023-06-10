@@ -20,7 +20,7 @@ void OperateList::clear()
 void OperateList::addOperate(Operate* p)
 {
 	operateList.push_back(p);
-	p->printToConsole();
+	//p->printToConsole();
 }
 
 int OperateList::getCount()
