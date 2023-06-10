@@ -9,12 +9,23 @@ class Operate
 { 
 public:
 	std::vector<int> vec;
-	Operate(std::vector<int> vector){vec = vector;}
+	Operate(std::vector<int> vector){
+		vec = vector;
+		qDebug() << "new OpL:";
+	}
 	virtual OperateMethod getMethod()=0;
 	virtual std::vector<int> getPoint1()=0;
 	virtual std::vector<int> getPoint2()=0;
 	virtual std::vector<int> getPoint3()=0;
 	virtual int getValue()=0;
+	void printToConsole() {
+		QString line="op:";
+		for (int i = 0; i < vec.size(); i++)
+		{
+			line.append(QString::number(vec.at(i)) + "\t\t");
+		}
+			qDebug().noquote() << line;
+	}
 };
 class MoveTo :public Operate {
 public:

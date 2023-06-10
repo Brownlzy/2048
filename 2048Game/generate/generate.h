@@ -6,6 +6,8 @@
 #include<QMessageBox>
 #include <QWidget>
 #include<qdebug.h>
+#include "../model/OperateList.h"
+
 #define SIZE 4
 class generate
 {
@@ -19,6 +21,6 @@ public:
 
 	generate();
 	//生成随机数2
-	void addNewNumber(Matrix *m);
+	void addNewNumber(Matrix *m, OperateList* opl);
 };
 

@@ -19,9 +19,13 @@ void MainControl::init()
 {
 	gui->setControlListener(this);
 	matrix=new Matrix(inita);
-	gen.addNewNumber(matrix);
-	gen.addNewNumber(matrix);
 	gui->setNowMatrix(matrix);
+
+	OperateList* opl = new OperateList();
+	gen.addNewNumber(matrix,opl);
+	gen.addNewNumber(matrix,opl);
+	gui->setNewMatrix(matrix);
+	gui->operate(opl);
 	matrix->printToConsole();
 }
 
@@ -37,10 +41,10 @@ void MainControl::onArrowControl(Direction control) {
 	opl=Move::move(control,matrix,&score);
 	qDebug() << score;
 	generate gen;
-	gen.addNewNumber(matrix);
+	gen.addNewNumber(matrix,opl);
 	gui->setNowScore(score);
 	matrix->printToConsole();
-	gui->setNowMatrix(matrix);
+	gui->setNewMatrix(matrix);
 	gui->operate(opl);
 	judgeEnd(*matrix);
 }
@@ -58,7 +62,7 @@ void MainControl::judgeEnd(Matrix matrix)
 		{
 			if(ax[i] == 2048)
 			{
-				gui->setGameState(GameUI::SUCCESS);
+				gui->setGameState(SUCCESS);
 				flag = -1;
 				records.insert(std::pair<int, int>(round,score));
 				break;
@@ -72,7 +76,7 @@ void MainControl::judgeEnd(Matrix matrix)
 	}
 	if(flag==0)
 	{
-	gui->setGameState(GameUI::FAILED);
+	gui->setGameState(FAILED);
 	records.insert(std::pair<int, int>(round, score));
 	}
 }

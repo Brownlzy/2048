@@ -3,7 +3,7 @@
 generate::generate() {
 }
 
-void generate::addNewNumber(Matrix* m) {
+void generate::addNewNumber(Matrix* m,OperateList* opl) {
 
     srand(uint(QTime(0, 0, 0).secsTo(QTime::currentTime())));
   
@@ -43,5 +43,5 @@ void generate::addNewNumber(Matrix* m) {
     }
     int randx = rand() % ni;
     m->setNumberIn(n[randx].i, n[randx].j,2);
- 
+    opl->addOperate(new NewIn(n[randx].i,n[randx].j,2));
 }
