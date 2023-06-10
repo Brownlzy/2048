@@ -15,6 +15,7 @@ private:
 	std::map<int, int>records;
 	generate gen;
 	int score=0;
+	bool isNew =false;
 	void init();
 
 public:
@@ -23,12 +24,12 @@ public:
 	void onArrowControl(Direction control);
 	void onFuncControl(FuncControl control);
 	
-	//¶ÁÎÄ¼þ£¨Í³¼Æ×î´óºÍÆ½¾ùÖµ£©
+	//ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Í³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½Öµï¿½ï¿½
 	std::map<int, int> readMapFromFile(const std::string& filename);
-	//Ð´ÎÄ¼þ:Á½ÖÖ£¬Ò»ÖÖÊÇ½«<int,int>£¬ÁíÒ»ÖÖÊÇ<int,double>
+	//Ð´ï¿½Ä¼ï¿½:ï¿½ï¿½ï¿½Ö£ï¿½Ò»ï¿½ï¿½ï¿½Ç½ï¿½<int,int>ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½<int,double>
 	void writeRecordsToFile(const std::map<int, int>& data, const std::string& filename);
 	void writeRecordsToFile(const std::map<int, double>& data, const std::string& filename);
-	//Í³¼Æ×î´óÊýºÍÆ½¾ùÖµ
+	//Í³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½Öµ
 	void sum();
 
 };

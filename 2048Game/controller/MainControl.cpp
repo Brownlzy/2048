@@ -17,6 +17,7 @@ int MainControl::round = 0;
 
 void MainControl::init()
 {
+	score = 0;
 	gui->setControlListener(this);
 	matrix=new Matrix(inita);
 	gui->setNowMatrix(matrix);
@@ -38,9 +39,10 @@ MainControl::MainControl(GameUI* gui)
 
 void MainControl::onArrowControl(Direction control) {
 	OperateList* opl = new OperateList;
-	opl=Move::move(control,matrix,&score);
+	opl=Move::move(control,matrix,&score,&isNew);
 	qDebug() << score;
 	generate gen;
+	if(isNew)
 	gen.addNewNumber(matrix,opl);
 	gui->setNowScore(score);
 	matrix->printToConsole();
