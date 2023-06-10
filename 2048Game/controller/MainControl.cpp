@@ -36,6 +36,11 @@ void MainControl::onArrowControl(Direction control) {
 	if(isNew)
 	gen.addNewNumber(matrix,opl);
 	gui->setNowScore(score);
+	if (score > maxs)
+		gui->setMaxScore(score);
+
+	else
+		gui->setMaxScore(maxs);
 	matrix->printToConsole();
 	gui->setNewMatrix(matrix);
 	gui->operate(opl);
@@ -57,7 +62,7 @@ void MainControl::judgeEnd(Matrix matrix)
 			{
 				gui->setGameState(SUCCESS);
 				flag = -1;
-				records.insert(std::pair<int, int>(round,score));
+				SetAll();
 				break;
 			}
 			if (ax[i] == 0||ax[i] == matrix.getNumberIn(x+1,i)|| ax[i] == matrix.getNumberIn(x, i+1))
@@ -70,14 +75,14 @@ void MainControl::judgeEnd(Matrix matrix)
 	if(flag==0)
 	{
 	gui->setGameState(FAILED);
-	records.insert(std::pair<int, int>(round, score));
+	SetAll();
 	}
 }
 
 void MainControl::onFuncControl(FuncControl control) {
 	if (control == START)
 	{
-		if(matrix!=nullptr)
+		if (matrix != nullptr)
 			matrix->~Matrix();
 		round++;
 		score = 0;
@@ -95,11 +100,11 @@ void MainControl::onFuncControl(FuncControl control) {
 
 		gui->setGameState(GAMING);
 	}
-	else if(control == END)
-		records.insert(std::pair<int, int>(round, score));
+	else if (control == END)
+		SetAll();
 	else 
 	{
-		records.insert(std::pair<int, int>(round, score));
+		SetAll();
 		writeRecordsToFile(records,"map.txt");
 	}
 }
@@ -197,3 +202,9 @@ void MainControl::sum()
 
 }
 
+void MainControl::SetAll()
+{
+	records.insert(std::pair<int, int>(round, score));
+	gui->setAvgScore(aves);
+	gui->setMaxScore(maxs);
+}

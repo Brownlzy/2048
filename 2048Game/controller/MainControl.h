@@ -33,6 +33,7 @@ public:
 	void writeRecordsToFile(const std::map<int, double>& data, const std::string& filename);
 	//ͳ���������ƽ��ֵ
 	void sum();
+	void SetAll();
 
 };
 
