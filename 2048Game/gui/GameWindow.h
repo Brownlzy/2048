@@ -27,6 +27,7 @@ private:
     Ui::GameWindowClass ui;
     Board* board;
     Matrix* matrix;
+    GameState state=FAILED;
     int nowLevel = 1;
     int nowScore = 0;
     int avgScore = 0;

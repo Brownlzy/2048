@@ -79,7 +79,6 @@ void Board::operate3(OperateList* opl) {
 	opl->~OperateList();
 	setNowMatrix(matrix);
 	animating = false;
-	qDebug() << "=========================================";
 }
 
 //void Board::deleteAnimations()

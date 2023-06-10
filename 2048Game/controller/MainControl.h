@@ -10,7 +10,7 @@ class MainControl:public ControllListener
 {
 private:
 	GameUI* gui;
-	Matrix* matrix;
+	Matrix* matrix=nullptr;
 	static int round;
 	std::map<int, int>records;
 	generate gen;

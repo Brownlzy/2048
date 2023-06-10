@@ -9,10 +9,7 @@ class Operate
 { 
 public:
 	std::vector<int> vec;
-	Operate(std::vector<int> vector){
-		vec = vector;
-		qDebug() << "new OpL:";
-	}
+	Operate(std::vector<int> vector){vec = vector;}
 	virtual OperateMethod getMethod()=0;
 	virtual std::vector<int> getPoint1()=0;
 	virtual std::vector<int> getPoint2()=0;
@@ -24,7 +21,7 @@ public:
 		{
 			line.append(QString::number(vec.at(i)) + "\t\t");
 		}
-			qDebug().noquote() << line;
+		qDebug().noquote() << line;
 	}
 };
 class MoveTo :public Operate {

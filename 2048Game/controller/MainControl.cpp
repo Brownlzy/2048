@@ -77,11 +77,14 @@ void MainControl::judgeEnd(Matrix matrix)
 void MainControl::onFuncControl(FuncControl control) {
 	if (control == START)
 	{
-		matrix->~Matrix();
+		if(matrix!=nullptr)
+			matrix->~Matrix();
 		round++;
 		score = 0;
 		matrix = new Matrix(inita);
 		gui->setNowMatrix(matrix);
+		gui->setLevel(round);
+		gui->setNowScore(score);
 
 		OperateList* opl = new OperateList();
 		gen.addNewNumber(matrix, opl);
@@ -90,7 +93,7 @@ void MainControl::onFuncControl(FuncControl control) {
 		gui->operate(opl);
 		matrix->printToConsole();
 
-
+		gui->setGameState(GAMING);
 	}
 	else
 		records.insert(std::pair<int, int>(round, score));

@@ -19,6 +19,7 @@ GameWindow::~GameWindow()
 
 void GameWindow::initView()
 {
+    setWindowTitle("2048");
     setFixedSize(361, 400);
     board = new Board(ui.widget);
     board->show();
@@ -42,11 +43,10 @@ void GameWindow::initView()
 
 void GameWindow::setGameState(GameState state)
 {
+    GameWindow::state = state;
     switch (state)
     {
     case READY:
-        board->setNowMatrix(new Matrix());
-        break;
     case GAMING:
         break;
     case SUCCESS:
@@ -110,6 +110,9 @@ void GameWindow::showSuccessResult()
 
 void GameWindow::newGame()
 {
+    if (state == GAMING) {
+        GameUI::listener->onFuncControl(END);
+    }
     GameUI::listener->onFuncControl(START);
 }
 
@@ -146,7 +149,9 @@ void GameWindow::showFailResult()
 
 void GameWindow::keyPressEvent(QKeyEvent* e)
 {
-    if (GameUI::listener == nullptr||board->isAnimating()) return;
+    if (GameUI::listener == nullptr
+        ||state!=GAMING
+        ||board->isAnimating()) return;
     switch (e->key())
     {
     case Qt::Key_W:
