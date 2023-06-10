@@ -81,7 +81,7 @@ void MainControl::onFuncControl(FuncControl control) {
 		if(matrix!=nullptr)
 			matrix->~Matrix();
 		round++;
-		score = 26028;
+		score = 0;
 #ifdef TEST_ARRAY
 		matrix = new Matrix(array);
 #else
@@ -92,8 +92,8 @@ void MainControl::onFuncControl(FuncControl control) {
 		gui->setNowScore(score);
 
 		OperateList* opl = new OperateList();
-		//gen.addNewNumber(matrix, opl);
-		//gen.addNewNumber(matrix, opl);
+		gen.addNewNumber(matrix, opl);
+		gen.addNewNumber(matrix, opl);
 		gui->setNewMatrix(matrix);
 		gui->operate(opl);
 		matrix->printToConsole();
