@@ -102,7 +102,7 @@ void MainControl::onFuncControl(FuncControl control) {
 	}
 	else if (control == END)
 		SetAll();
-	else 
+	else
 	{
 		SetAll();
 		writeRecordsToFile(records,"map.txt");
@@ -131,7 +131,7 @@ std::map<int, int> MainControl::readMapFromFile(const std::string& filename)
 
 		data[key] = value;
 	}
-	return std::map<int, int>();
+	return data;
 }
 
 void MainControl::writeRecordsToFile(const std::map<int, int>& data, const std::string& filename)
@@ -177,6 +177,37 @@ void MainControl::writeRecordsToFile(const std::map<int, double>& data, const st
 
 }
 
+void MainControl::writeRecordsToCSV(const std::map<int, int>& data, const std::string& filename)
+{
+	std::ofstream file(filename);
+
+	if (!file) {
+		std::cerr << "Failed to open the file.\n";
+		return;
+	}
+
+	for (const auto& pair : data) {
+		file << pair.first << ',' << pair.second << '\n';
+	}
+}
+
+void MainControl::getLargest()
+{
+	if (records.empty()) {
+		std::cout << "The map is empty.\n";
+		return;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			int temp = matrix->getNumberIn(i, j);
+			if (temp > maxs) {
+				maxs = temp;
+			}
+		}
+	}
+}
+
 void MainControl::sum()
 {
 
@@ -185,26 +216,23 @@ void MainControl::sum()
 		return;
 	}
 
-	int max_value = 0;
-	double sum = 0.0;
+	int sum = 0;
 
 	for (const auto& pair : records) {
-		if (pair.second > max_value) {
-			max_value = pair.second;
-		}
+
 		sum += pair.second;
 	}
-	double average = sum / records.size();
-
-	std::map<int, double> result = { {max_value,average} };
-
-	writeRecordsToFile(result, "map.txt");
+	aves = sum / (round-1);
 
 }
 
 void MainControl::SetAll()
 {
 	records.insert(std::pair<int, int>(round, score));
+	if ((round - 1) != 0) 
+		  sum();
+	
+
 	gui->setAvgScore(aves);
 	gui->setMaxScore(maxs);
 }

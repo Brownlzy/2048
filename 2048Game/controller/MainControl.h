@@ -17,6 +17,7 @@ private:
 	int score=0;
 	int maxs = 0;
 	int aves = 0;
+	
 	bool isNew =false;
 	void init();
 
@@ -26,12 +27,13 @@ public:
 	void onArrowControl(Direction control);
 	void onFuncControl(FuncControl control);
 	
-	//���ļ���ͳ������ƽ��ֵ��
+
 	std::map<int, int> readMapFromFile(const std::string& filename);
-	//д�ļ�:���֣�һ���ǽ�<int,int>����һ����<int,double>
 	void writeRecordsToFile(const std::map<int, int>& data, const std::string& filename);
 	void writeRecordsToFile(const std::map<int, double>& data, const std::string& filename);
-	//ͳ���������ƽ��ֵ
+	void writeRecordsToCSV(const std::map<int, int>& data, const std::string& filename);
+
+    void getLargest();
 	void sum();
 	void SetAll();
 
