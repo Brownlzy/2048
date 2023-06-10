@@ -7,6 +7,6 @@ class Move
 {
 public:
 	
-	static OperateList move(Direction control, Matrix* matrix);
+	static OperateList move(Direction control, Matrix* matrix,int *score);
 };
 
