@@ -1,15 +1,55 @@
 #include "generate.h"
 
+generate::generate() {
+    widget = new QWidget();//??
+}
 
-void gen::addNewNumber() {
+void generate::addNewNumber() {
+    srand(uint(QTime(0, 0, 0).secsTo(QTime::currentTime())));
     srand(time(0));
-    while (true) {
-        int i = rand() % SIZE; // ÔÚ0~3Ö®¼äËæ»úÑ¡Ò»¸öÊı
-        int j = rand() % SIZE; // ÔÚ0~3Ö®¼äËæ»úÑ¡Ò»¸öÊı
-        if (ma[i][j] == 0) { // Èç¹ûÕâ¸öÎ»ÖÃÊÇ¿ÕµÄ
-            int num = rand() % 2 == 0 ? 2 : 4; // Éú³É2»ò4
-            ma[i][j] = num; // ½«ĞÂÉú³ÉµÄ2»ò4·Åµ½(i,j)µÄÎ»ÖÃÉÏ
-            break;
+    int i = 0, j = 0;
+    struct Ns n[15];
+    int ni = 0;
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 4; j++) {
+            if (ma[i][j] == 0) {
+                n[ni].i = i;
+                n[ni].j = j;
+                ni++;
+            }
         }
     }
+
+    //åˆ¤æ–­æ¸¸æˆæ˜¯å¦ç»“æŸ
+    if (ni == 0) {
+        for (i = 0; i < 4; i++) {
+            for (j = 0; j < 3; j++) {
+                if (ma[i][j] == ma[i][j + 1]) {
+                    return;
+                }
+            }
+        }
+        for (j = 0; j < 4; j++) {
+            for (i = 0; i < 3; i++) {
+                if (ma[i][j] == ma[i + 1][j]) {
+                    return;
+                }
+            }
+        }
+        QMessageBox::about(widget, "æ¸¸æˆå¤±è´¥", "åˆ†æ•°ä¸ºï¼š" + QString::number(score) + " ");
+        return;
+    }
+    int rand = rand() % ni;
+    ma[n[rand].i][n[rand].j] = 2;
+
+    //while (true) {
+
+    //    int i = rand() % SIZE; // åœ¨0~3ä¹‹é—´éšæœºé€‰ä¸€ä¸ªæ•°
+    //    int j = rand() % SIZE; // åœ¨0~3ä¹‹é—´éšæœºé€‰ä¸€ä¸ªæ•°
+    //    if (ma[i][j] == 0) { // å¦‚æœè¿™ä¸ªä½ç½®æ˜¯ç©ºçš„
+    //        int num = rand() % 2 == 0 ? 2 : 4; // ç”Ÿæˆ2æˆ–4
+    //        ma[i][j] = num; // å°†æ–°ç”Ÿæˆçš„2æˆ–4æ”¾åˆ°(i,j)çš„ä½ç½®ä¸Š
+    //        break;
+    //    }
+    //}
 }
