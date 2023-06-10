@@ -8,7 +8,7 @@
 #include <sstream>
 
 //#define END_WHEN_2048
-#define TEST_ARRAY
+//#define TEST_ARRAY
 
 class MainControl:public ControllListener
 {
