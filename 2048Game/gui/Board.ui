@@ -13,21 +13,6 @@
   <property name="windowTitle">
    <string>Board</string>
   </property>
-  <widget class="QWidget" name="gridLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>361</width>
-     <height>361</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="boardGrid">
-    <property name="sizeConstraint">
-     <enum>QLayout::SetMaximumSize</enum>
-    </property>
-   </layout>
-  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
