@@ -1,12 +1,14 @@
 #pragma once
 #include <list>
 #include <vector>
+#include "enmu.h"
+#include <QString>
+#include <QDebug>
 
 class Operate
 { 
 public:
 	std::vector<int> vec;
-	enum OperateMethod{MOVE,MERGE,NEW};
 	Operate(std::vector<int> vector){vec = vector;}
 	virtual OperateMethod getMethod()=0;
 	virtual std::vector<int> getPoint1()=0;
@@ -53,11 +55,13 @@ public:
 class OperateList
 {
 private:
-	std::list<Operate*> operateList;
+	std::vector<Operate*> operateList;
 
 public:
+	~OperateList();
 	void clear();
 	void addOperate(Operate* p);
 	int getCount();
+	Operate* getOperate(int pos);
 };
 

@@ -23,7 +23,8 @@ private:
 	int value=0;
 public:
 	Number(QWidget *parent);
+	Number(QWidget* parent, int x, int y,int width, int height, int value);
 	~Number();
-	void setValue(const int value);
+	void setValue(const int value1);
 	int getValue();
 };

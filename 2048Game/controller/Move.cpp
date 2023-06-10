@@ -1,8 +1,8 @@
 #include "Move.h"
 
-OperateList Move::move(Direction direction,Matrix *matrix)
+OperateList* Move::move(Direction direction,Matrix *matrix)
 {
-    OperateList oplist;
+    OperateList* oplist=new OperateList();
         for (int no = 0; no < 4; no++) 
         {
             int* ano = matrix->getLineOn(direction,no);
@@ -21,14 +21,46 @@ OperateList Move::move(Direction direction,Matrix *matrix)
                     ano[j] = 0;
                     ano[k] = 0;
                     ano[i] = temp;
-                    oplist.addOperate(new MergeTo(j, no, k, no, i, no, temp));
+                    switch (direction)
+                    {
+                    case UP:
+                        oplist->addOperate(new MergeTo( j,no,  k,no,  i,no, temp));
+                        break;
+                    case LEFT:
+                        oplist->addOperate(new MergeTo(no, j, no,k,  no, i, temp));
+                        break;
+                    case RIGHT:
+                        oplist->addOperate(new MergeTo( no,3-j, no,3-k,  no,3-i,  temp));
+                        break;
+                    case DOWN:
+                        oplist->addOperate(new MergeTo(3-j,no, 3-k, no,  3- i,no, temp));
+                        break;
+                    default:
+                        break;
+                    }
                 }
                 else if(j < 4)
                 {
                     int temp = ano[j];
                     ano[j] = 0;
                     ano[i] = temp;
-                    oplist.addOperate(new MoveTo(j, no, i, no, temp));
+                    switch (direction)
+                    {
+                    case UP:
+                    oplist->addOperate(new MoveTo( j,no, i,no,  temp));
+                        break;
+                    case LEFT:
+                    oplist->addOperate(new MoveTo( no,j, no,i,  temp));
+                        break;
+                    case DOWN:
+                    oplist->addOperate(new MoveTo( 3-j,no, 3-i, no, temp));
+                        break;
+                    case RIGHT:
+                    oplist->addOperate(new MoveTo( no,3-j,  no,3-i, temp));
+                        break;
+                    default:
+                        break;
+                    }
                 }
             }
             ano;

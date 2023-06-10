@@ -9,13 +9,24 @@ Number::Number(QWidget *parent)
 	show();
 }
 
+Number::Number(QWidget *parent,int x,int y, int width, int height, int value)
+	: QLabel(parent)
+{
+	qDebug() << x << y << width << height << value;
+	setGeometry(x,y,width,height);
+	setValue(value);
+	setAlignment(Qt::AlignCenter);
+	show();
+}
+
 Number::~Number()
 {
 
 }
 
-void Number::setValue(const int value)
+void Number::setValue(const int value1)
 {
+	value = value1;
 	setText("");
 	switch (value)
 	{
@@ -55,6 +66,7 @@ void Number::setValue(const int value)
 	case 0:
 	default:
 		setStyleSheet(LABEL_0);
+		value = 0;
 		break;
 	}
 	setText("    " + QString::number(value)+"    ");

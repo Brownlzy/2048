@@ -5,6 +5,10 @@
 #include "Number.h"
 #include "../model/Matrix.h"
 #include "../model/OperateList.h"
+#include <QPropertyAnimation>
+#include <vector>
+
+#define ANIMATION_DURATION 200
 
 class Board : public QWidget
 {
@@ -15,9 +19,22 @@ public:
 	~Board();
 	void initView();
 	void setNowMatrix(Matrix* matrix);
-	void operate(OperateList opl);
+	void setNewMatrix(Matrix* matrix);
+	void operate(OperateList* opl);
+	bool isAnimating();
 
 private:
 	Ui::BoardClass ui;
 	Number*** numbers;
+	Matrix* matrix;
+	std::vector<Number*> tempNumbers;
+	std::vector<QPropertyAnimation*> animations;
+	bool animating = false;
+
+	void deleteTempNumbers();
+	void startAnimation();
+	//void deleteAnimations();
+	void generateAnimation(OperateList* opl, bool isMove);
+	void operate2(OperateList* opl);
+	void operate3(OperateList* opl);
 };

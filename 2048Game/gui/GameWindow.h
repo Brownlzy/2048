@@ -13,20 +13,29 @@ class GameWindow : public QMainWindow , public GameUI
 public:
     GameWindow(QWidget* parent = nullptr);
     ~GameWindow();
-    void initView();
     void setGameState(GameState state);
     void setNowMatrix(Matrix* matrix);
-    void operate(OperateList opl);
+    void setNewMatrix(Matrix* matrix);
+    void operate(OperateList* opl);
+    void setLevel(int level);
     void setNowScore(int score);
+    void setAvgScore(int score);
     void setMaxScore(int score);
 
 private:
     Ui::GameWindowClass ui;
     Board* board;
     Matrix* matrix;
+    int nowLevel = 1;
     int nowScore = 0;
+    int avgScore = 0;
     int maxScore = 0;
+    QLabel* levelLabel;
+    QLabel* nowLabel;
+    QLabel* avgLabel;
+    QLabel* maxLabel;
 
+    void initView();
     void showSuccessResult();
     void showFailResult();
 

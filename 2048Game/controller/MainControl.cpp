@@ -24,10 +24,10 @@ MainControl::MainControl(GameUI* gui)
 
 void MainControl::onArrowControl(Direction control) {
 
-	OperateList opl=Move::move(control,matrix);
+	OperateList* opl=Move::move(control,matrix);
 	matrix->printToConsole();
+	gui->setNewMatrix(matrix);
 	gui->operate(opl);
-	gui->setNowMatrix(matrix);
 }
 
 void MainControl::onFuncControl(FuncControl control) {
