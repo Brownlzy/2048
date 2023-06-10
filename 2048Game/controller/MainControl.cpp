@@ -17,17 +17,8 @@ int MainControl::round = 0;
 
 void MainControl::init()
 {
-	score = 0;
 	gui->setControlListener(this);
-	matrix=new Matrix(inita);
-	gui->setNowMatrix(matrix);
-
-	OperateList* opl = new OperateList();
-	gen.addNewNumber(matrix,opl);
-	gen.addNewNumber(matrix,opl);
-	gui->setNewMatrix(matrix);
-	gui->operate(opl);
-	matrix->printToConsole();
+	gui->setGameState(READY);
 }
 
 
@@ -86,8 +77,9 @@ void MainControl::judgeEnd(Matrix matrix)
 void MainControl::onFuncControl(FuncControl control) {
 	if (control == START)
 	{
-		round++;
 		matrix->~Matrix();
+		round++;
+		score = 0;
 		matrix = new Matrix(inita);
 		gui->setNowMatrix(matrix);
 
@@ -97,6 +89,7 @@ void MainControl::onFuncControl(FuncControl control) {
 		gui->setNewMatrix(matrix);
 		gui->operate(opl);
 		matrix->printToConsole();
+
 
 	}
 	else
