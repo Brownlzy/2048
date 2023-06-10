@@ -4,14 +4,10 @@
 
 
 
-int array[4][4]= { 0,0,0,2,
-				   2,0,0,2,
-				   2,0,0,4,
-				   0,0,4,8 };
-int inita[4][4] = { 0,0,0,0,
-				  0,0,0,0,
-				  0,0,0,0,
-				  0,0,0,0 };
+int array[4][4]= { 2,4,8,2,
+				   4,8,64,4,
+				   2048,512,128,64,
+				   0,0,2,0 };
 
 int MainControl::round = 0;
 
@@ -30,6 +26,7 @@ MainControl::MainControl(GameUI* gui)
 
 void MainControl::onArrowControl(Direction control) {
 	OperateList* opl = new OperateList;
+	//judgeEnd(*matrix);
 	opl=Move::move(control,matrix,&score,&isNew);
 	qDebug() << score;
 	generate gen;
@@ -46,20 +43,19 @@ void MainControl::onArrowControl(Direction control) {
 void MainControl::judgeEnd(Matrix matrix)
 {
 	int flag=0;
+	int sflag=0;
 	for (int x = 0; x < 4; x++)
 	{
-		if (flag != 0)
-			break;
 		int* ax = matrix.getLineOnX(x);
 		for (int i = 0; i < 4; i++)
 		{
+#ifdef END_WHEN_2048
 			if(ax[i] == 2048)
 			{
-				gui->setGameState(SUCCESS);
-				flag = -1;
-				records.insert(std::pair<int, int>(round,score));
+				sflag = 1;
 				break;
 			}
+#endif // END_WHEN_2048
 			if (ax[i] == 0||ax[i] == matrix.getNumberIn(x+1,i)|| ax[i] == matrix.getNumberIn(x, i+1))
 			{
 				flag = -1;
@@ -67,10 +63,15 @@ void MainControl::judgeEnd(Matrix matrix)
 			}
 		}
 	}
-	if(flag==0)
-	{
-	gui->setGameState(FAILED);
-	records.insert(std::pair<int, int>(round, score));
+#ifdef END_WHEN_2048
+	if (sflag == 1) {
+		gui->setGameState(SUCCESS);
+		records.insert(std::pair<int, int>(round, score));
+	}
+#endif // END_WHEN_2048
+	if(flag==0){
+		gui->setGameState(FAILED);
+		records.insert(std::pair<int, int>(round, score));
 	}
 }
 
@@ -80,15 +81,19 @@ void MainControl::onFuncControl(FuncControl control) {
 		if(matrix!=nullptr)
 			matrix->~Matrix();
 		round++;
-		score = 0;
-		matrix = new Matrix(inita);
+		score = 26028;
+#ifdef TEST_ARRAY
+		matrix = new Matrix(array);
+#else
+		matrix = new Matrix();
+#endif // TEST_ARRAY
 		gui->setNowMatrix(matrix);
 		gui->setLevel(round);
 		gui->setNowScore(score);
 
 		OperateList* opl = new OperateList();
-		gen.addNewNumber(matrix, opl);
-		gen.addNewNumber(matrix, opl);
+		//gen.addNewNumber(matrix, opl);
+		//gen.addNewNumber(matrix, opl);
 		gui->setNewMatrix(matrix);
 		gui->operate(opl);
 		matrix->printToConsole();

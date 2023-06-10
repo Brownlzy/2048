@@ -30,6 +30,9 @@ void Number::setValue(const int value1)
 	setText("");
 	switch (value)
 	{
+	case 0:
+		setStyleSheet(LABEL_0);
+		break;
 	case 2:
 		setStyleSheet(LABEL_2);
 		break;
@@ -61,12 +64,8 @@ void Number::setValue(const int value1)
 		setStyleSheet(LABEL_1024);
 		break;
 	case 2048:
-		setStyleSheet(LABEL_2048);
-		break;
-	case 0:
 	default:
-		setStyleSheet(LABEL_0);
-		value = 0;
+		setStyleSheet(LABEL_2048);
 		break;
 	}
 	setText("    " + QString::number(value)+"    ");
