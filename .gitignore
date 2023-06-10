@@ -56,3 +56,4 @@ compile_commands.json
 /.vs/2048
 /2048Game/x64/Debug
 /x64/Debug
+/.vs
