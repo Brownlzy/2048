@@ -95,8 +95,13 @@ void MainControl::onFuncControl(FuncControl control) {
 
 		gui->setGameState(GAMING);
 	}
-	else
+	else if(control == END)
 		records.insert(std::pair<int, int>(round, score));
+	else 
+	{
+		records.insert(std::pair<int, int>(round, score));
+		writeRecordsToFile(records,"map.txt");
+	}
 }
 
 std::map<int, int> MainControl::readMapFromFile(const std::string& filename)

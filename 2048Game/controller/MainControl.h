@@ -15,6 +15,8 @@ private:
 	std::map<int, int>records;
 	generate gen;
 	int score=0;
+	int maxs = 0;
+	int aves = 0;
 	bool isNew =false;
 	void init();
 
