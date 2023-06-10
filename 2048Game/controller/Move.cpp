@@ -1,6 +1,6 @@
 #include "Move.h"
 
-OperateList Move::move(Direction direction,Matrix *matrix)
+OperateList Move::move(Direction direction,Matrix *matrix,int *score)
 {
     OperateList oplist;
         for (int no = 0; no < 4; no++) 
@@ -21,6 +21,7 @@ OperateList Move::move(Direction direction,Matrix *matrix)
                     ano[j] = 0;
                     ano[k] = 0;
                     ano[i] = temp;
+                    *score += temp;
                     oplist.addOperate(new MergeTo(j, no, k, no, i, no, temp));
                 }
                 else if(j < 4)
