@@ -83,7 +83,20 @@ void MainControl::judgeEnd(Matrix matrix)
 
 void MainControl::onFuncControl(FuncControl control) {
 	if (control == START)
+	{
 		round++;
+		matrix->~Matrix();
+		matrix = new Matrix(inita);
+		gui->setNowMatrix(matrix);
+
+		OperateList* opl = new OperateList();
+		gen.addNewNumber(matrix, opl);
+		gen.addNewNumber(matrix, opl);
+		gui->setNewMatrix(matrix);
+		gui->operate(opl);
+		matrix->printToConsole();
+
+	}
 	else
 		records.insert(std::pair<int, int>(round, score));
 }
