@@ -139,7 +139,8 @@ void GameWindow::closeEvent(QCloseEvent* event)
     {
         event->ignore();
     }
-    GameUI::listener->onFuncControl(END);
+    else
+        GameUI::listener->onFuncControl(QUIT);
 }
 
 void GameWindow::showFailResult()
