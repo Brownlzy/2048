@@ -2,8 +2,6 @@
 #include "Move.h"
 #include <QDebug>
 
-
-
 int array[4][4]= {
 4,2,16,4,
 2,16,32,16,
@@ -28,6 +26,7 @@ MainControl::MainControl(GameUI* gui)
 
 void MainControl::onArrowControl(Direction control) {
 	OperateList* opl = new OperateList;
+	//judgeEnd(*matrix);
 	opl=Move::move(control,matrix,&score,&isNew);
 	qDebug() << score;
 	generate gen;
@@ -62,7 +61,7 @@ void MainControl::judgeEnd(Matrix matrix)
 				break;
 			}
 #endif // END_WHEN_2048
-			if ((ax[i] == 0)||(ax[i] == matrix.getNumberIn(x+1,i))|| (ax[i] == matrix.getNumberIn(x, i+1)))
+			if (ax[i] == 0||ax[i] == matrix.getNumberIn(x+1,i)|| ax[i] == matrix.getNumberIn(x, i+1))
 			{
 				flag = -1;
 				break;
