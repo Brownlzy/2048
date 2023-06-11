@@ -6,9 +6,11 @@
 #include <map>
 #include <fstream>
 #include <sstream>
+#include <QDateTime>
 
 //#define END_WHEN_2048
 //#define TEST_ARRAY
+#define START_NUM_COUNT 2
 
 class MainControl:public ControllListener
 {
@@ -31,11 +33,8 @@ public:
 	void onArrowControl(Direction control);
 	void onFuncControl(FuncControl control);
 	
-
 	std::map<int, int> readMapFromFile(const std::string& filename);
-	void writeRecordsToFile(const std::map<int, int>& data, const std::string& filename);
-	void writeRecordsToFile(const std::map<int, double>& data, const std::string& filename);
-	void writeRecordsToCSV(const std::map<int, int>& data, const std::string& filename);
+	void writeRecordsToFile(const std::map<int, int>& data, const QString filename);
 
     void getLargest();
 	void average();

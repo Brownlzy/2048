@@ -23,13 +23,11 @@ void GameWindow::initView()
     setFixedSize(361, 400);
     board = new Board(ui.widget);
     board->show();
+
     levelLabel=new QLabel("局数：1");
     nowLabel = new QLabel("得分：0");
     avgLabel = new QLabel("平均：0");
     maxLabel = new QLabel("最高：0");
-    //nowLabel->setAlignment(Qt::AlignCenter);
-    //avgLabel->setAlignment(Qt::AlignCenter);
-    //maxLabel->setAlignment(Qt::AlignRight);
     ui.statusBar->addWidget(levelLabel, 1);
     ui.statusBar->addWidget(nowLabel, 1);
     ui.statusBar->addWidget(maxLabel, 1);
@@ -39,6 +37,7 @@ void GameWindow::initView()
     connect(ui.actionEndGame, SIGNAL(triggered()), this, SLOT(endGame()));
     connect(ui.actionQuit, SIGNAL(triggered()), this, SLOT(quit()));
     connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(about()));
+    connect(ui.actionAIMode, SIGNAL(triggered()), this, SLOT(setAi()));
 }
 
 void GameWindow::setGameState(GameState state)
@@ -101,6 +100,49 @@ void GameWindow::setMaxScore(int score)
     maxLabel->setText("最高：" + QString::number(score));
 }
 
+void GameWindow::keyPress(int key)
+{
+    if (GameUI::listener == nullptr
+        || state != GAMING
+        || board->isAnimating()) return;
+    switch (key)
+    {
+    case Qt::Key_W:
+    case Qt::Key_Up:
+        GameUI::listener->onArrowControl(UP);
+        break;
+    case Qt::Key_S:
+    case Qt::Key_Down:
+        GameUI::listener->onArrowControl(DOWN);
+        break;
+    case Qt::Key_A:
+    case Qt::Key_Left:
+        GameUI::listener->onArrowControl(LEFT);
+        break;
+    case Qt::Key_D:
+    case Qt::Key_Right:
+        GameUI::listener->onArrowControl(RIGHT);
+        break;
+    default:
+        break;
+    }
+}
+
+Matrix* GameWindow::getNowMatrix()
+{
+    return matrix;
+}
+
+bool GameWindow::isAnimating()
+{
+    return board->isAnimating();
+}
+
+int GameWindow::getGameState()
+{
+    return state;
+}
+
 void GameWindow::showSuccessResult()
 {
     if (QMessageBox::Yes == QMessageBox::question(this, "2048", "你已经成功通关！是否再来一次？", QMessageBox::Yes, QMessageBox::No)) {
@@ -143,6 +185,15 @@ void GameWindow::closeEvent(QCloseEvent* event)
         GameUI::listener->onFuncControl(QUIT);
 }
 
+void GameWindow::setAi()
+{
+    if (ui.actionAIMode->isChecked()) {
+        //TODO:启动AI
+    } else {
+        //TODO:停止AI
+    }
+}
+
 void GameWindow::showFailResult()
 {
     if (QMessageBox::Yes == QMessageBox::question(this, "2048", "你已经无路可走啦！是否重试？", QMessageBox::Yes, QMessageBox::No)) {
@@ -152,28 +203,5 @@ void GameWindow::showFailResult()
 
 void GameWindow::keyPressEvent(QKeyEvent* e)
 {
-    if (GameUI::listener == nullptr
-        ||state!=GAMING
-        ||board->isAnimating()) return;
-    switch (e->key())
-    {
-    case Qt::Key_W:
-    case Qt::Key_Up:
-        GameUI::listener->onArrowControl(UP);
-        break;
-    case Qt::Key_S:
-    case Qt::Key_Down:
-        GameUI::listener->onArrowControl(DOWN);
-        break;
-    case Qt::Key_A:
-    case Qt::Key_Left:
-        GameUI::listener->onArrowControl(LEFT);
-        break;
-    case Qt::Key_D:
-    case Qt::Key_Right:
-        GameUI::listener->onArrowControl(RIGHT);
-        break;
-    default:
-        break;
-    }
+    keyPress(e->key());
 }

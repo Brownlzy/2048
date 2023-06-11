@@ -56,11 +56,15 @@ void Board::setNewMatrix(Matrix* matrix)
 
 void Board::operate(OperateList* opl)
 {
-	//deleteAnimations();
+#ifdef ENABLE_ANIMATION
 	animating = true;
 	generateAnimation(opl,true);
 	startAnimation();
 	QTimer::singleShot(ANIMATION_DURATION, [=]() { operate2(opl); });
+#else
+	opl->~OperateList();
+	setNowMatrix(matrix);
+#endif // ENABLE_ANIMATION
 }
 
 bool Board::isAnimating()

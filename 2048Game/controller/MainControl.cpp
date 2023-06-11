@@ -4,10 +4,12 @@
 
 
 
-int array[4][4]= { 2,4,8,2,
-				   4,8,64,4,
-				   2048,512,128,64,
-				   0,0,2,0 };
+int array[4][4]= {
+4,2,16,4,
+2,16,32,16,
+16,8,2,4,
+2,16,8,2 
+};
 
 int MainControl::round = 0;
 
@@ -60,7 +62,7 @@ void MainControl::judgeEnd(Matrix matrix)
 				break;
 			}
 #endif // END_WHEN_2048
-			if (ax[i] == 0||ax[i] == matrix.getNumberIn(x+1,i)|| ax[i] == matrix.getNumberIn(x, i+1))
+			if ((ax[i] == 0)||(ax[i] == matrix.getNumberIn(x+1,i))|| (ax[i] == matrix.getNumberIn(x, i+1)))
 			{
 				flag = -1;
 				break;
@@ -97,8 +99,9 @@ void MainControl::onFuncControl(FuncControl control) {
 		gui->setNowScore(score);
 
 		OperateList* opl = new OperateList();
-		gen.addNewNumber(matrix, opl);
-		gen.addNewNumber(matrix, opl);
+		for (int i = 0; i < START_NUM_COUNT; i++) {
+			gen.addNewNumber(matrix, opl);
+		}
 		gui->setNewMatrix(matrix);
 		gui->operate(opl);
 		matrix->printToConsole();
@@ -110,8 +113,8 @@ void MainControl::onFuncControl(FuncControl control) {
 	}
 	else{
 		SetAll();
-		writeRecordsToFile(records, "map.txt");
-		writeRecordsToCSV(records,"map.csv");
+		QDateTime time = QDateTime::currentDateTime();   //获取当前时间
+		writeRecordsToFile(records, "records_" + QString::number(time.toMSecsSinceEpoch()) + ".txt");
 	}
 
 }
@@ -139,60 +142,25 @@ std::map<int, int> MainControl::readMapFromFile(const std::string& filename)
 	return data;
 }
 
-void MainControl::writeRecordsToFile(const std::map<int, int>& data, const std::string& filename)
+void MainControl::writeRecordsToFile(const std::map<int, int>& data, const QString filename)
 {
 
-	std::ofstream file(filename, std::ios::app);
+	std::ofstream file(filename.toLocal8Bit(), std::ios::app);
 	if (!file.is_open()) {
-		std::cerr << "Unable to open file: " << filename << std::endl;
+		std::cerr << "Unable to open file: " << filename.toLocal8Bit() << std::endl;
 		return;
 	}
 
 	int total = 0;
 	int largest = 0;
 	int average = 0;
-	int cnt = 0;
+	file << "局数,得分,最高分,平均分" << '\n';
 	for (const auto& pair : data) {
-
-		file << "第" <<(++cnt) << "局" << '\n';
-		file << "总分" << ' '<< "最高分" << ' '<< "平均分" << '\n';
 		if (pair.second > largest) largest = pair.second;
 		total += pair.second;
-		average = total/cnt;
-
-		file << pair.second << ' '<< largest<<' '<<average<<'\n';
+		average = total/ pair.first;
+		file << pair.first << ','<< pair.second << ',' << largest << ',' << average<<  '\n';
 	}
-	file << "=====================================================================" << '\n';
-	file.close();
-
-}
-
-
-void MainControl::writeRecordsToCSV(const std::map<int, int>& data, const std::string& filename)
-{
-	std::ofstream file(filename, std::ios::app);
-	if (!file.is_open()) {
-		std::cerr << "unable to open file: " << filename << std::endl;
-		return;
-	}
-	int total = 0;
-	int largest = 0;
-	int average = 0;
-	int cnt = 0;
-	for (const auto& pair : data) {
-		/*std::string str = "第" + std::to_string(++cnt) + "局";*/
-		file << "第" + std::to_string(++cnt) + "局"<< '\n';
-		file << "总分" << ', '<< "最高分" <<  ',' << "平均分" << '\n';
-		if (pair.second > largest) largest = pair.second;
-		total += pair.second;
-		average = total / cnt;
-
-		file << pair.second << ',' << largest << ',' << average << '\n';
-
-
-	}
-	file << "=====================================================================" << '\n';
-
 	file.close();
 }
 
