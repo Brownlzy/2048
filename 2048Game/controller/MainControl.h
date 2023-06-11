@@ -17,7 +17,7 @@ private:
 	int score=0;
 	int maxs = 0;
 	int aves = 0;
-	
+
 	bool isNew =false;
 	void init();
 
@@ -34,7 +34,7 @@ public:
 	void writeRecordsToCSV(const std::map<int, int>& data, const std::string& filename);
 
     void getLargest();
-	void sum();
+	void average();
 	void SetAll();
 
 };

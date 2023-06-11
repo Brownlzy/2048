@@ -1,4 +1,4 @@
-#include "MainControl.h"
+﻿#include "MainControl.h"
 #include "Move.h"
 #include <QDebug>
 
@@ -82,6 +82,7 @@ void MainControl::judgeEnd(Matrix matrix)
 void MainControl::onFuncControl(FuncControl control) {
 	if (control == START)
 	{
+		
 		if (matrix != nullptr)
 			matrix->~Matrix();
 		round++;
@@ -100,27 +101,27 @@ void MainControl::onFuncControl(FuncControl control) {
 
 		gui->setGameState(GAMING);
 	}
-	else if (control == END)
+	else  if (control == END) {
 		SetAll();
-	else
-	{
-		SetAll();
-		writeRecordsToFile(records,"map.txt");
 	}
+	else{
+		SetAll();
+		writeRecordsToFile(records, "map.txt");
+		writeRecordsToCSV(records,"map.csv");
+	}
+		
 }
 
 std::map<int, int> MainControl::readMapFromFile(const std::string& filename)
 {
 	std::map<int, int> data;
-
-	//���ļ�
 	std::ifstream file(filename);
 
 	if (!file) {
 		std::cerr << "Failed to open the file.\n";
 		return data;
 	}
-	std::string line;//��ȡһ������
+	std::string line;
 	while (std::getline(file, line)) {
 		std::istringstream iss(line);
 		int key, value;
@@ -136,59 +137,59 @@ std::map<int, int> MainControl::readMapFromFile(const std::string& filename)
 
 void MainControl::writeRecordsToFile(const std::map<int, int>& data, const std::string& filename)
 {
-	// ���ļ�
+	
 	std::ofstream file(filename, std::ios::app);
-
-	// �ж��ܷ�ɹ���
 	if (!file.is_open()) {
 		std::cerr << "Unable to open file: " << filename << std::endl;
 		return;
 	}
-
-	// ������д���ı��ļ���
+	
+	int total = 0;
+	int largest = 0;
+	int average = 0;
+	int cnt = 0;
 	for (const auto& pair : data) {
-		file << pair.first << ' ' << pair.second << '\n';
+		
+		file << "第" <<(++cnt) << "局" << '\n';
+		file << "总分" << ' '<< "最高分" << ' '<< "平均分" << '\n';
+		if (pair.second > largest) largest = pair.second;
+		total += pair.second;
+		average = total/cnt;
+		
+		file << pair.second << ' '<< largest<<' '<<average<<'\n';
 	}
-
-	//�ر��ļ�
+	file << "=====================================================================" << '\n';
 	file.close();
 
 }
 
-void MainControl::writeRecordsToFile(const std::map<int, double>& data, const std::string& filename)
-{
-	// ���ļ�
-	std::ofstream file(filename, std::ios::app);
-
-	// �ж��ܷ�ɹ���
-	if (!file.is_open()) {
-		std::cerr << "Unable to open file: " << filename << std::endl;
-		return;
-	}
-
-	// ������д���ı��ļ���
-	for (const auto& pair : data) {
-		file << pair.first << ' ' << pair.second << '\n';
-	}
-	file << "=========================================================================================" << '\n';
-
-	//�ر��ļ�
-	file.close();
-
-}
 
 void MainControl::writeRecordsToCSV(const std::map<int, int>& data, const std::string& filename)
 {
-	std::ofstream file(filename);
-
-	if (!file) {
-		std::cerr << "Failed to open the file.\n";
+	std::ofstream file(filename, std::ios::app);
+	if (!file.is_open()) {
+		std::cerr << "unable to open file: " << filename << std::endl;
 		return;
 	}
-
+	int total = 0;
+	int largest = 0;
+	int average = 0;
+	int cnt = 0;
 	for (const auto& pair : data) {
-		file << pair.first << ',' << pair.second << '\n';
+		/*std::string str = "第" + std::to_string(++cnt) + "局";*/
+		file << "第" + std::to_string(++cnt) + "局"<< '\n';
+		file << "总分" << ', '<< "最高分" <<  ',' << "平均分" << '\n';
+		if (pair.second > largest) largest = pair.second;
+		total += pair.second;
+		average = total / cnt;
+
+		file << pair.second << ',' << largest << ',' << average << '\n';
+
+
 	}
+	file << "=====================================================================" << '\n';
+
+	file.close();
 }
 
 void MainControl::getLargest()
@@ -198,17 +199,17 @@ void MainControl::getLargest()
 		return;
 	}
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			int temp = matrix->getNumberIn(i, j);
-			if (temp > maxs) {
-				maxs = temp;
-			}
+	for (int i = 0; i < round; i++) {
+		std::map<int, int>::iterator it= records.find(i+1);
+		if (it != records.end())
+		{
+			int temp= records.find(i+1)->second;
+			if (temp > maxs) maxs = temp;
 		}
 	}
 }
 
-void MainControl::sum()
+void MainControl::average()
 {
 
 	if (records.empty()) {
@@ -217,22 +218,21 @@ void MainControl::sum()
 	}
 
 	int sum = 0;
-
 	for (const auto& pair : records) {
 
 		sum += pair.second;
 	}
-	aves = sum / (round-1);
-
+	aves = sum / round;
 }
 
 void MainControl::SetAll()
 {
 	records.insert(std::pair<int, int>(round, score));
-	if ((round - 1) != 0) 
-		  sum();
+	if (round>0) 
+		  average();
 	
-
+	getLargest();
+	
 	gui->setAvgScore(aves);
 	gui->setMaxScore(maxs);
 }
