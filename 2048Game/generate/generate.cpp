@@ -44,12 +44,14 @@ void generate::addNewNumber(Matrix* m,OperateList* opl) {
 
     
     int randx = rand() % ni;
-
-    if (rand() % 2) {
+    double temp = QRandomGenerator::global()->generateDouble();
+    if (temp<=0.9) {
+        qDebug() << temp<<'\n';
         m->setNumberIn(n[randx].i, n[randx].j, 2);
         opl->addOperate(new NewIn(n[randx].i, n[randx].j, 2));
     }
     else {
+        qDebug() << temp << '\n';
         m->setNumberIn(n[randx].i, n[randx].j, 4);
         opl->addOperate(new NewIn(n[randx].i, n[randx].j, 4));
     }
