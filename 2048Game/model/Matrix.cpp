@@ -36,7 +36,10 @@ Matrix::~Matrix()
 
 int Matrix::getNumberIn(int x, int y)
 {
-	return matrix[x][y];
+	if (x >= 0 && x < 4 && y >= 0 && y < 4)
+		return matrix[x][y];
+	else
+		return -1;
 }
 
 void Matrix::setNumberIn(int x, int y, const int value)

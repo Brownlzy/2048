@@ -9,6 +9,7 @@
 #include <vector>
 
 #define ANIMATION_DURATION 100
+//#define ENABLE_ANIMATION
 
 class Board : public QWidget
 {

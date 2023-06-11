@@ -22,6 +22,10 @@ public:
     void setNowScore(int score);
     void setAvgScore(int score);
     void setMaxScore(int score);
+    void keyPress(int key);
+    Matrix* getNowMatrix();
+    bool isAnimating();
+    int getGameState();
 
 private:
     Ui::GameWindowClass ui;
@@ -48,4 +52,5 @@ public slots:
     void quit();
     void about();
     void closeEvent(QCloseEvent* event);
+    void setAi();
 };

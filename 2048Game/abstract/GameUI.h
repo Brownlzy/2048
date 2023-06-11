@@ -16,6 +16,12 @@ public:
     virtual void setNowScore(int score) = 0;
     virtual void setAvgScore(int score) = 0;
     virtual void setMaxScore(int score) = 0;
+
+    virtual void keyPress(int key) = 0;
+    virtual Matrix* getNowMatrix() = 0;
+    virtual bool isAnimating() = 0;
+    virtual int getGameState() =0 ;
+
     void setControlListener(ControllListener* listener) {
         GameUI::listener = listener;
     }

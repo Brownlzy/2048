@@ -7,7 +7,7 @@
 #include <QWidget>
 #include<qdebug.h>
 #include "../model/OperateList.h"
-
+#include <QRandomGenerator>
 #define SIZE 4
 class generate
 {

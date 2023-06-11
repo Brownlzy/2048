@@ -1,13 +1,13 @@
-#include "MainControl.h"
+﻿#include "MainControl.h"
 #include "Move.h"
 #include <QDebug>
 
-
-
-int array[4][4]= { 2,4,8,2,
-				   4,8,64,4,
-				   2048,512,128,64,
-				   0,0,2,0 };
+int array[4][4]= {
+4,2,16,4,
+2,16,32,16,
+16,8,2,4,
+2,16,8,2 
+};
 
 int MainControl::round = 0;
 
@@ -33,6 +33,11 @@ void MainControl::onArrowControl(Direction control) {
 	if(isNew)
 	gen.addNewNumber(matrix,opl);
 	gui->setNowScore(score);
+	if (score > maxs)
+		gui->setMaxScore(score);
+
+	else
+		gui->setMaxScore(maxs);
 	matrix->printToConsole();
 	gui->setNewMatrix(matrix);
 	gui->operate(opl);
@@ -66,19 +71,20 @@ void MainControl::judgeEnd(Matrix matrix)
 #ifdef END_WHEN_2048
 	if (sflag == 1) {
 		gui->setGameState(SUCCESS);
-		records.insert(std::pair<int, int>(round, score));
+		SetAll();
 	}
 #endif // END_WHEN_2048
 	if(flag==0){
 		gui->setGameState(FAILED);
-		records.insert(std::pair<int, int>(round, score));
+		SetAll();
 	}
 }
 
 void MainControl::onFuncControl(FuncControl control) {
 	if (control == START)
 	{
-		if(matrix!=nullptr)
+
+		if (matrix != nullptr)
 			matrix->~Matrix();
 		round++;
 		score = 0;
@@ -92,30 +98,36 @@ void MainControl::onFuncControl(FuncControl control) {
 		gui->setNowScore(score);
 
 		OperateList* opl = new OperateList();
-		gen.addNewNumber(matrix, opl);
-		gen.addNewNumber(matrix, opl);
+		for (int i = 0; i < START_NUM_COUNT; i++) {
+			gen.addNewNumber(matrix, opl);
+		}
 		gui->setNewMatrix(matrix);
 		gui->operate(opl);
 		matrix->printToConsole();
 
 		gui->setGameState(GAMING);
 	}
-	else
-		records.insert(std::pair<int, int>(round, score));
+	else  if (control == END) {
+		SetAll();
+	}
+	else{
+		SetAll();
+		QDateTime time = QDateTime::currentDateTime();   //获取当前时间
+		writeRecordsToFile(records, "records_" + QString::number(time.toMSecsSinceEpoch()) + ".txt");
+	}
+
 }
 
 std::map<int, int> MainControl::readMapFromFile(const std::string& filename)
 {
 	std::map<int, int> data;
-
-	//���ļ�
 	std::ifstream file(filename);
 
 	if (!file) {
 		std::cerr << "Failed to open the file.\n";
 		return data;
 	}
-	std::string line;//��ȡһ������
+	std::string line;
 	while (std::getline(file, line)) {
 		std::istringstream iss(line);
 		int key, value;
@@ -126,53 +138,49 @@ std::map<int, int> MainControl::readMapFromFile(const std::string& filename)
 
 		data[key] = value;
 	}
-	return std::map<int, int>();
+	return data;
 }
 
-void MainControl::writeRecordsToFile(const std::map<int, int>& data, const std::string& filename)
+void MainControl::writeRecordsToFile(const std::map<int, int>& data, const QString filename)
 {
-	// ���ļ�
-	std::ofstream file(filename, std::ios::app);
 
-	// �ж��ܷ�ɹ���
+	std::ofstream file(filename.toLocal8Bit(), std::ios::app);
 	if (!file.is_open()) {
-		std::cerr << "Unable to open file: " << filename << std::endl;
+		std::cerr << "Unable to open file: " << filename.toLocal8Bit() << std::endl;
 		return;
 	}
 
-	// ������д���ı��ļ���
+	int total = 0;
+	int largest = 0;
+	int average = 0;
+	file << "局数,得分,最高分,平均分" << '\n';
 	for (const auto& pair : data) {
-		file << pair.first << ' ' << pair.second << '\n';
+		if (pair.second > largest) largest = pair.second;
+		total += pair.second;
+		average = total/ pair.first;
+		file << pair.first << ','<< pair.second << ',' << largest << ',' << average<<  '\n';
 	}
-
-	//�ر��ļ�
 	file.close();
-
 }
 
-void MainControl::writeRecordsToFile(const std::map<int, double>& data, const std::string& filename)
+void MainControl::getLargest()
 {
-	// ���ļ�
-	std::ofstream file(filename, std::ios::app);
-
-	// �ж��ܷ�ɹ���
-	if (!file.is_open()) {
-		std::cerr << "Unable to open file: " << filename << std::endl;
+	if (records.empty()) {
+		std::cout << "The map is empty.\n";
 		return;
 	}
 
-	// ������д���ı��ļ���
-	for (const auto& pair : data) {
-		file << pair.first << ' ' << pair.second << '\n';
+	for (int i = 0; i < round; i++) {
+		std::map<int, int>::iterator it= records.find(i+1);
+		if (it != records.end())
+		{
+			int temp= records.find(i+1)->second;
+			if (temp > maxs) maxs = temp;
+		}
 	}
-	file << "=========================================================================================" << '\n';
-
-	//�ر��ļ�
-	file.close();
-
 }
 
-void MainControl::sum()
+void MainControl::average()
 {
 
 	if (records.empty()) {
@@ -180,20 +188,22 @@ void MainControl::sum()
 		return;
 	}
 
-	int max_value = 0;
-	double sum = 0.0;
-
+	int sum = 0;
 	for (const auto& pair : records) {
-		if (pair.second > max_value) {
-			max_value = pair.second;
-		}
+
 		sum += pair.second;
 	}
-	double average = sum / records.size();
-
-	std::map<int, double> result = { {max_value,average} };
-
-	writeRecordsToFile(result, "map.txt");
-
+	aves = sum / round;
 }
 
+void MainControl::SetAll()
+{
+	records.insert(std::pair<int, int>(round, score));
+	if (round>0)
+		  average();
+
+	getLargest();
+
+	gui->setAvgScore(aves);
+	gui->setMaxScore(maxs);
+}
