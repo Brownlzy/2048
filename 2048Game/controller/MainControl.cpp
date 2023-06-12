@@ -54,13 +54,11 @@ void MainControl::judgeEnd(Matrix matrix)
 		int* ax = matrix.getLineOnX(x);
 		for (int i = 0; i < 4; i++)
 		{
-#ifdef END_WHEN_2048
-			if(ax[i] == 2048)
+			if(isClassic&&ax[i] == 2048)
 			{
 				sflag = 1;
 				break;
 			}
-#endif // END_WHEN_2048
 			if (ax[i] == 0||ax[i] == matrix.getNumberIn(x+1,i)|| ax[i] == matrix.getNumberIn(x, i+1))
 			{
 				flag = -1;
@@ -68,54 +66,75 @@ void MainControl::judgeEnd(Matrix matrix)
 			}
 		}
 	}
-#ifdef END_WHEN_2048
-	if (sflag == 1) {
+	if (isClassic&&sflag == 1) {
 		gui->setGameState(SUCCESS);
 		SetAll();
 	}
-#endif // END_WHEN_2048
 	if(flag==0){
 		gui->setGameState(FAILED);
 		SetAll();
 	}
 }
 
-void MainControl::onFuncControl(FuncControl control) {
-	if (control == START)
+void MainControl::quitGame() {
+	if (round > 0)
 	{
-
-		if (matrix != nullptr)
-			matrix->~Matrix();
-		round++;
-		score = 0;
-#ifdef TEST_ARRAY
-		matrix = new Matrix(array);
-#else
-		matrix = new Matrix();
-#endif // TEST_ARRAY
-		gui->setNowMatrix(matrix);
-		gui->setLevel(round);
-		gui->setNowScore(score);
-
-		OperateList* opl = new OperateList();
-		for (int i = 0; i < START_NUM_COUNT; i++) {
-			gen.addNewNumber(matrix, opl);
-		}
-		gui->setNewMatrix(matrix);
-		gui->operate(opl);
-		matrix->printToConsole();
-
-		gui->setGameState(GAMING);
-	}
-	else  if (control == END) {
-		SetAll();
-	}
-	else{
 		SetAll();
 		QDateTime time = QDateTime::currentDateTime();   //获取当前时间
 		writeRecordsToFile(records, "records_" + QString::number(time.toMSecsSinceEpoch()) + ".txt");
 	}
+}
+void MainControl::initGame() {
+	if (matrix != nullptr)
+		matrix->~Matrix();
+	round++;
+	score = 0;
+#ifdef TEST_ARRAY
+	matrix = new Matrix(array);
+#else
+	matrix = new Matrix();
+#endif // TEST_ARRAY
+	gui->setNowMatrix(matrix);
+	gui->setLevel(round);
+	gui->setNowScore(score);
 
+	OperateList* opl = new OperateList();
+	for (int i = 0; i < START_NUM_COUNT; i++) {
+		gen.addNewNumber(matrix, opl);
+	}
+	gui->setNewMatrix(matrix);
+	gui->operate(opl);
+	matrix->printToConsole();
+
+	gui->setGameState(GAMING);
+
+}
+
+void MainControl::onFuncControl(FuncControl control) {
+	switch (control)
+	{
+	case START:
+		initGame();
+		break;
+	case END:
+		SetAll();
+		break;
+	case QUIT:
+		quitGame();
+		break;
+	case CLASSIC:
+		isClassic = true;
+		break;
+	case MINFINITY:
+		isClassic = false;
+		break;
+	case ENABLEAI:
+		break;
+	case DISABLEAI:
+		break;
+	default:
+		break;
+	}
 }
 
 std::map<int, int> MainControl::readMapFromFile(const std::string& filename)

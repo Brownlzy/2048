@@ -1,7 +1,7 @@
 #pragma once
 #include "../abstract/GameUI.h"
 #include "../abstract/ControllListener.h"
-#include "../generate/generate.h"
+#include "generate.h"
 #include <iostream>
 #include <map>
 #include <fstream>
@@ -24,8 +24,11 @@ private:
 	int maxs = 0;
 	int aves = 0;
 
+	bool isClassic = true;
 	bool isNew =false;
 	void init();
+	void initGame();
+	void quitGame();
 
 public:
 	MainControl(GameUI* gui);

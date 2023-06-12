@@ -9,7 +9,7 @@
 #include <vector>
 
 #define ANIMATION_DURATION 100
-//#define ENABLE_ANIMATION
+#define ENABLE_ANIMATION
 
 class Board : public QWidget
 {
@@ -23,11 +23,13 @@ public:
 	void setNewMatrix(Matrix* matrix);
 	void operate(OperateList* opl);
 	bool isAnimating();
+	void setAnimation(bool is);
 
 private:
 	Ui::BoardClass ui;
 	Number*** numbers;
 	Matrix* matrix;
+	bool isAnimation = true;
 	std::vector<Number*> tempNumbers;
 	std::vector<QPropertyAnimation*> animations;
 	bool animating = false;
@@ -38,4 +40,7 @@ private:
 	void generateAnimation(OperateList* opl, bool isMove);
 	void operate2(OperateList* opl);
 	void operate3(OperateList* opl);
+
+signals:
+	void animationEnded();
 };

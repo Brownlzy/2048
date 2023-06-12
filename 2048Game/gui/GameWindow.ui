@@ -41,6 +41,8 @@
     <addaction name="actionNewGame"/>
     <addaction name="separator"/>
     <addaction name="actionAIMode"/>
+    <addaction name="actionClassic"/>
+    <addaction name="actionAnimation"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -48,6 +50,7 @@
     <property name="title">
      <string>帮助</string>
     </property>
+    <addaction name="actionGameRule"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menu"/>
@@ -79,7 +82,28 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>AI Mode</string>
+    <string>AI模式</string>
+   </property>
+  </action>
+  <action name="actionGameRule">
+   <property name="text">
+    <string>游戏规则</string>
+   </property>
+  </action>
+  <action name="actionAnimation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>启用动画</string>
+   </property>
+  </action>
+  <action name="actionClassic">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>经典模式</string>
    </property>
   </action>
  </widget>
