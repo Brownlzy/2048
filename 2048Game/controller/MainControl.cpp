@@ -3,10 +3,10 @@
 #include <QDebug>
 
 int array[4][4]= {
-4,2,16,4,
-2,16,32,16,
-16,8,2,4,
-2,16,8,2 
+0,2048,1024,0,
+256,128,64,32,
+2,2048,1024,512,
+256,128,0,32
 };
 
 int MainControl::round = 0;
@@ -35,7 +35,6 @@ void MainControl::onArrowControl(Direction control) {
 	gui->setNowScore(score);
 	if (score > maxs)
 		gui->setMaxScore(score);
-
 	else
 		gui->setMaxScore(maxs);
 	matrix->printToConsole();

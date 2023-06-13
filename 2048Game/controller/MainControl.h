@@ -8,7 +8,6 @@
 #include <sstream>
 #include <QDateTime>
 
-//#define END_WHEN_2048
 //#define TEST_ARRAY
 #define START_NUM_COUNT 2
 

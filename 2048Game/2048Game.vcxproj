@@ -59,6 +59,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)python\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)python\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>python310.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -84,15 +93,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ai\Ai2048.cpp" />
     <ClCompile Include="controller\MainControl.cpp" />
     <ClCompile Include="controller\Move.cpp" />
-    <ClCompile Include="generate\generate.cpp" />
+    <ClCompile Include="controller\generate.cpp" />
     <ClCompile Include="gui\Board.cpp" />
     <ClCompile Include="gui\Number.cpp" />
     <ClCompile Include="model\Matrix.cpp" />
     <ClCompile Include="model\OperateList.cpp" />
     <None Include="README.md" />
-    <QtRcc Include="GameWindow.qrc" />
     <QtRcc Include="gui\GameWindow.qrc" />
     <QtUic Include="gui\Board.ui" />
     <QtUic Include="gui\GameWindow.ui" />
@@ -105,9 +114,10 @@
   <ItemGroup>
     <ClInclude Include="abstract\ControllListener.h" />
     <ClInclude Include="abstract\GameUI.h" />
+    <QtMoc Include="ai\Ai2048.h" />
     <ClInclude Include="controller\MainControl.h" />
     <ClInclude Include="controller\Move.h" />
-    <ClInclude Include="generate\generate.h" />
+    <ClInclude Include="controller\generate.h" />
     <ClInclude Include="model\enmu.h" />
     <ClInclude Include="model\OperateList.h" />
     <QtMoc Include="gui\Board.h" />
