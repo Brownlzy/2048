@@ -1,5 +1,4 @@
 ﻿#include "MainControl.h"
-#include "Move.h"
 #include <QDebug>
 
 int array[4][4]= {
@@ -27,11 +26,10 @@ MainControl::MainControl(GameUI* gui)
 void MainControl::onArrowControl(Direction control) {
 	OperateList* opl = new OperateList;
 	//judgeEnd(*matrix);
-	opl=Move::move(control,matrix,&score,&isNew);
+	opl=move(control,matrix,&score,&isNew);
 	qDebug() << score;
-	generate gen;
 	if(isNew)
-	gen.addNewNumber(matrix,opl);
+	addNewNumber(matrix,opl);
 	gui->setNowScore(score);
 	if (score > maxs)
 		gui->setMaxScore(score);
@@ -99,7 +97,7 @@ void MainControl::initGame() {
 
 	OperateList* opl = new OperateList();
 	for (int i = 0; i < START_NUM_COUNT; i++) {
-		gen.addNewNumber(matrix, opl);
+		addNewNumber(matrix, opl);
 	}
 	gui->setNewMatrix(matrix);
 	gui->operate(opl);
@@ -136,28 +134,6 @@ void MainControl::onFuncControl(FuncControl control) {
 	}
 }
 
-std::map<int, int> MainControl::readMapFromFile(const std::string& filename)
-{
-	std::map<int, int> data;
-	std::ifstream file(filename);
-
-	if (!file) {
-		std::cerr << "Failed to open the file.\n";
-		return data;
-	}
-	std::string line;
-	while (std::getline(file, line)) {
-		std::istringstream iss(line);
-		int key, value;
-		if (!(iss >> key >> value)) {
-			std::cerr << "Failed to parse line: " << line << '\n';
-			continue;
-		}
-
-		data[key] = value;
-	}
-	return data;
-}
 
 void MainControl::writeRecordsToFile(const std::map<int, int>& data, const QString filename)
 {
@@ -173,12 +149,52 @@ void MainControl::writeRecordsToFile(const std::map<int, int>& data, const QStri
 	int average = 0;
 	file << "局数,得分,最高分,平均分" << '\n';
 	for (const auto& pair : data) {
-		if (pair.second > largest) largest = pair.second;
+		if (pair.second > largest) 
+			largest = pair.second;
 		total += pair.second;
 		average = total/ pair.first;
-		file << pair.first << ','<< pair.second << ',' << largest << ',' << average<<  '\n';
+		file << pair.first << ','<< pair.second << ',' << largest<< ',' << average<<  '\n';
 	}
 	file.close();
+}
+
+void MainControl::addNewNumber(Matrix* matrix, OperateList* opl)
+{
+
+	srand(uint(QTime(0, 0, 0).secsTo(QTime::currentTime())));
+
+	int i = 0,j = 0;
+	//找空格数
+	struct Ns n[15];
+	int ni = 0;
+	for (int x = 0; x < 4; x++)
+	{
+		int* ano = matrix->getLineOnX(x);
+		for (int i = 0; i < 4; i++)
+		{
+			if (ano[i] == 0)
+			{
+				n[ni].i = x;
+				n[ni].j = i;
+				ni++;
+			}
+		}
+	}
+
+	int randx = rand() % ni;
+	double temp = QRandomGenerator::global()->generateDouble();
+	if (temp <= 0.9) {
+		qDebug() << temp << '\n';
+		matrix->setNumberIn(n[randx].i, n[randx].j, 2);
+		opl->addOperate(new NewIn(n[randx].i, n[randx].j, 2));
+	}
+	else {
+		qDebug() << temp << '\n';
+		matrix->setNumberIn(n[randx].i, n[randx].j, 4);
+		opl->addOperate(new NewIn(n[randx].i, n[randx].j, 4));
+	}
+	return;
+
 }
 
 void MainControl::getLargest()
@@ -193,7 +209,8 @@ void MainControl::getLargest()
 		if (it != records.end())
 		{
 			int temp= records.find(i+1)->second;
-			if (temp > maxs) maxs = temp;
+			if (temp > maxs) 
+				maxs = temp;
 		}
 	}
 }
@@ -219,9 +236,91 @@ void MainControl::SetAll()
 	records.insert(std::pair<int, int>(round, score));
 	if (round>0)
 		  average();
-
 	getLargest();
 
 	gui->setAvgScore(aves);
 	gui->setMaxScore(maxs);
+}
+
+OperateList* MainControl::move(Direction direction, Matrix* matrix, int* score, bool* isNew)
+{
+	*isNew = false;
+	OperateList* oplist = new OperateList();
+	for (int no = 0; no < 4; no++)
+	{
+		int* ano = matrix->getLineOn(direction, no);
+		for (int i = 0; i < 4; i++) {
+			int j, k;
+			for (j = i; j < 4; j++) {
+				if (ano[j] != 0)
+					break;
+			}
+			for (k = j + 1; k < 4; k++) {
+				if (ano[k] != 0)
+					break;
+			}
+			if (j < 4 && k < 4 && ano[j] == ano[k]) {
+				int temp = ano[j] * 2;
+				ano[j] = 0;
+				ano[k] = 0;
+				ano[i] = temp;
+				*score += temp;
+				switch (direction)
+				{
+				case UP:
+					oplist->addOperate(new MergeTo(j, no, k, no, i, no, temp));
+					*isNew = true;
+					break;
+				case LEFT:
+					oplist->addOperate(new MergeTo(no, j, no, k, no, i, temp));
+					*isNew = true;
+					break;
+				case RIGHT:
+					oplist->addOperate(new MergeTo(no, 3 - j, no, 3 - k, no, 3 - i, temp));
+					*isNew = true;
+					break;
+				case DOWN:
+					oplist->addOperate(new MergeTo(3 - j, no, 3 - k, no, 3 - i, no, temp));
+					*isNew = true;
+					break;
+				default:
+					break;
+				}
+			}
+			else if (j < 4)
+			{
+				int temp = ano[j];
+				ano[j] = 0;
+				ano[i] = temp;
+				switch (direction)
+				{
+				case UP:
+					oplist->addOperate(new MoveTo(j, no, i, no, temp));
+					if (j != i)
+						*isNew = true;
+					break;
+				case LEFT:
+					oplist->addOperate(new MoveTo(no, j, no, i, temp));
+					if (j != i)
+						*isNew = true;
+					break;
+				case DOWN:
+					oplist->addOperate(new MoveTo(3 - j, no, 3 - i, no, temp));
+					if ((3 - j) != (3 - i))
+						*isNew = true;
+					break;
+				case RIGHT:
+					oplist->addOperate(new MoveTo(no, 3 - j, no, 3 - i, temp));
+					if ((3 - j) != (3 - i))
+						*isNew = true;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		ano;
+		matrix->setLineOn(direction, no, ano);
+	}
+	return oplist;
 }
