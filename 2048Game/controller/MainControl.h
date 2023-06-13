@@ -1,7 +1,6 @@
 #pragma once
 #include "../abstract/GameUI.h"
 #include "../abstract/ControllListener.h"
-#include "generate.h"
 #include <iostream>
 #include <map>
 #include <fstream>
