@@ -10,7 +10,8 @@ def get_next_best_move2(a1,a2,a3,a4,b1,b2,b3,b4,c1,c2,c3,c4,d1,d2,d3,d4,n_simula
             board[i][j]=state1[i*4+j]
     game=Game.Game(board)
     mcts = MCTS.MCTS(game,50)
-    move = mcts.select_best_move()
+    #move = mcts.select_best_move()
+    move =  mcts.choose_move()
     print(move)
     match move:
         case 'up':
