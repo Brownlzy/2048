@@ -1,13 +1,6 @@
 import random
 from copy import deepcopy
 
-def simulate_game(game):
-    while not game.is_game_over():
-        move = random.choice(game.get_possible_moves())
-        game.execute_move(move)
-        game.generate_new_cell()
-    return game.score
-
 class MCTS:
     def __init__(self, game, n_simulations=50):
         self.game = game
@@ -24,22 +17,6 @@ class MCTS:
                 test_game.execute_move(move)
                 test_game.generate_new_cell()
                 total_score += self.simulate(test_game)
-            avg_score = total_score / self.n_simulations
-            if avg_score > best_score:
-                best_score = avg_score
-                best_move = move
-        return best_move
-     
-    def choose_move(self):
-        best_move = None
-        best_score = -1
-        for move in self.game.get_possible_moves():
-            total_score = 0
-            games = [deepcopy(self.game) for _ in range(self.n_simulations)]
-            for game in games:
-                game.execute_move(move)
-            scores = self.pool.map(simulate_game, games)
-            total_score = sum(scores)
             avg_score = total_score / self.n_simulations
             if avg_score > best_score:
                 best_score = avg_score

@@ -66,12 +66,12 @@ void MainControl::judgeEnd(Matrix matrix)
 		}
 	}
 	if (isClassic&&sflag == 1) {
-		gui->setGameState(SUCCESS);
 		SetAll();
+		gui->setGameState(SUCCESS);
 	}
 	if(flag==0){
-		gui->setGameState(FAILED);
 		SetAll();
+		gui->setGameState(FAILED);
 	}
 }
 
