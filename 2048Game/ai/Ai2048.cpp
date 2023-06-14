@@ -1,27 +1,27 @@
-#include "Ai2048.h"
+ï»¿#include "Ai2048.h"
 #include <QDir>
 
 PyObject* Ai2048::initPython()
 {
-	Py_SetPythonHome(L"E:\\CODE\\Project\\2048\\python\\");
+	Py_SetPythonHome(L"'D:\\python\\3.9.13");
 	Py_Initialize();
 	if (!Py_IsInitialized())
 	{
 		printf("error!");
-		PyErr_Print();	//´òÓ¡´íÎó
+		PyErr_Print();	//æ‰“å°é”™è¯¯
 		return nullptr;
 	}
-	//ÏÈ»ñµÃpyÎÄ¼şËùÔÚµÄÂ·¾¶£¬±ØĞëÒª¾ø¶ÔÂ·¾¶
+	//å…ˆè·å¾—pyæ–‡ä»¶æ‰€åœ¨çš„è·¯å¾„ï¼Œå¿…é¡»è¦ç»å¯¹è·¯å¾„
 	QString path = QDir::currentPath();
 	path = path.replace("\\", "/");
 	//qDebug() << path;
 	path = "sys.path.append('" + path + "/pycode" + "')";
 	QByteArray temp = path.toLocal8Bit();
-	//ÔÙÉèÖÃpythonÔËĞĞÂ·¾¶
+	//å†è®¾ç½®pythonè¿è¡Œè·¯å¾„
 	PyRun_SimpleString("import sys");
 	PyRun_SimpleString(temp.data());
-	PyRun_SimpleString("sys.path.append('E:\\CODE\\Project\\2048\\python\\Lib\\site-packages')");
-	//µ¼ÈëÄ£¿é
+	PyRun_SimpleString("sys.path.append('D:\\python\\3.9.13\\Lib\\site-packages')");
+	//å¯¼å…¥æ¨¡å—
 	PyObject* pModule = PyImport_ImportModule("main");
 	pythonModule = pModule;
 	return pModule;
@@ -29,7 +29,7 @@ PyObject* Ai2048::initPython()
 
 void Ai2048::releasePython()
 {
-	//½áÊø£¬ÊÍ·Åpython
+	//ç»“æŸï¼Œé‡Šæ”¾python
 	Py_Finalize();
 }
 
@@ -56,15 +56,15 @@ int Ai2048::getBestMove(Matrix * mat, int n)
 	PyObject* pFunc = PyObject_GetAttrString(pythonModule, "get_next_best_move2");
 	if (pFunc)
 	{
-		//´´½¨²ÎÊıÁĞ±í
-		PyObject* args = PyTuple_New(17);//¶¨ÒåÒ»¸öpython±äÁ¿
+		//åˆ›å»ºå‚æ•°åˆ—è¡¨
+		PyObject* args = PyTuple_New(17);//å®šä¹‰ä¸€ä¸ªpythonå˜é‡
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++)
 			{
-				PyTuple_SetItem(args, i * 4 + j, PyLong_FromLong(mat->getNumberIn(i, j)));// ±äÁ¿¸ñÊ½×ª»»³Épython¸ñÊ½
+				PyTuple_SetItem(args, i * 4 + j, PyLong_FromLong(mat->getNumberIn(i, j)));// å˜é‡æ ¼å¼è½¬æ¢æˆpythonæ ¼å¼
 			}
 		}
-		PyTuple_SetItem(args, 16, PyLong_FromLong(n));// ±äÁ¿¸ñÊ½×ª»»³Épython¸ñÊ½
+		PyTuple_SetItem(args, 16, PyLong_FromLong(n));// å˜é‡æ ¼å¼è½¬æ¢æˆpythonæ ¼å¼
 
 		PyObject* result = PyObject_CallObject(pFunc, args);
 		if (result)
