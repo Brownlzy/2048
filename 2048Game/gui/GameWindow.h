@@ -6,6 +6,8 @@
 #include "Board.h"
 #include <QKeyEvent>
 #include <QCloseEvent>
+#include <QThread>
+#include "../ai/Ai2048.h"
 
 class GameWindow : public QMainWindow , public GameUI
 {
@@ -31,6 +33,8 @@ private:
     Ui::GameWindowClass ui;
     Board* board;
     Matrix* matrix;
+    QThread* thread = nullptr;
+    Ai2048* ai = nullptr;
     GameState state=FAILED;
     int nowLevel = 1;
     int nowScore = 0;
@@ -40,6 +44,7 @@ private:
     QLabel* nowLabel;
     QLabel* avgLabel;
     QLabel* maxLabel;
+    bool isAI=false;
 
     void initView();
     void showSuccessResult();
@@ -53,4 +58,11 @@ public slots:
     void about();
     void closeEvent(QCloseEvent* event);
     void setAi();
+    void setAnimation();
+    void setClassic();
+    void showRule();
+    void animationEnded();
+
+signals:
+    void getNextMove(Matrix* mat, int n);
 };

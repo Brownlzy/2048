@@ -28,7 +28,6 @@ void Board::initView()
 		numbers[i] = new Number*[4];
 		for (int j = 0; j < 4; j++) {
 			numbers[i][j] = new Number(this,j*92,i*92,86,86,0);
-			//ui.boardGrid->addWidget(numbers[i][j],i,j,1,1,Qt::AlignJustify);
 			numbers[i][j]->setValue(0);
 		}
 	}
@@ -42,11 +41,6 @@ void Board::setNowMatrix(Matrix* matrix)
 			numbers[i][j]->setValue(matrix->getNumberIn(i, j));
 		}
 	}
-	//QPropertyAnimation* animation = new QPropertyAnimation(, "geometry");
-	//animation->setDuration(2000);
-	//animation->setStartValue(QRect(270, 0, 86, 86));
-	//animation->setEndValue(QRect(0, 0, 86, 86));
-	//animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void Board::setNewMatrix(Matrix* matrix)
@@ -56,20 +50,26 @@ void Board::setNewMatrix(Matrix* matrix)
 
 void Board::operate(OperateList* opl)
 {
-#ifdef ENABLE_ANIMATION
-	animating = true;
-	generateAnimation(opl,true);
-	startAnimation();
-	QTimer::singleShot(ANIMATION_DURATION, [=]() { operate2(opl); });
-#else
-	opl->~OperateList();
-	setNowMatrix(matrix);
-#endif // ENABLE_ANIMATION
+	if(isAnimation){
+		animating = true;
+		generateAnimation(opl,true);
+		startAnimation();
+		QTimer::singleShot(ANIMATION_DURATION, [=]() { operate2(opl); });
+	}else{
+		opl->~OperateList();
+		setNowMatrix(matrix);
+		emit animationEnded();
+	}
 }
 
 bool Board::isAnimating()
 {
 	return animating;
+}
+
+void Board::setAnimation(bool is)
+{
+	isAnimation = is;
 }
 
 void Board::operate2(OperateList* opl) {
@@ -83,17 +83,8 @@ void Board::operate3(OperateList* opl) {
 	opl->~OperateList();
 	setNowMatrix(matrix);
 	animating = false;
+	emit animationEnded();
 }
-
-//void Board::deleteAnimations()
-//{
-//	if (animations == nullptr) return;
-//	for (int i = 0; i < oplCount; i++) {
-//		delete[] animations[i];
-//	}
-//	delete[] animations;
-//	animations = nullptr;
-//}
 
 void Board::deleteTempNumbers()
 {
