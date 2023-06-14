@@ -2,7 +2,7 @@ import random
 from copy import deepcopy
 
 class MCTS:
-    def __init__(self, game, n_simulations=50):
+    def __init__(self, game, n_simulations):
         self.game = game
         self.n_simulations = n_simulations
         self.action_rewards = {}

@@ -40,6 +40,7 @@ private:
     int nowScore = 0;
     int avgScore = 0;
     int maxScore = 0;
+    int aiLevel = 50;
     QLabel* levelLabel;
     QLabel* nowLabel;
     QLabel* avgLabel;
@@ -58,6 +59,7 @@ public slots:
     void about();
     void closeEvent(QCloseEvent* event);
     void setAi();
+    void setAiLevel();
     void setAnimation();
     void setClassic();
     void showRule();

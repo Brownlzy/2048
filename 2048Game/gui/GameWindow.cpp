@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QTimer>
 #include <QMessageBox>
+#include <QInputDialog>
 
 GameWindow::GameWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -12,15 +13,11 @@ GameWindow::GameWindow(QWidget* parent)
     initView();
     setFocusPolicy(Qt::StrongFocus);
 
-    // 实例化子线程
     thread = new QThread;
-    // 实例化子线程对象
     ai = new Ai2048();
     // 将子线程对象移到子线程
     ai->moveToThread(thread);
-    // 线程finished->线程自己deleteLater
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
-    // 线程finished->线程对象deleteLater
     connect(thread, &QThread::finished, ai, &Ai2048::deleteLater);
     // 主线程发送信号->线程对象启动run函数
     connect(this, &GameWindow::getNextMove, ai, &Ai2048::getBestMove);
@@ -59,6 +56,7 @@ void GameWindow::initView()
 
     ui.actionClassic->setChecked(true);
     ui.actionAnimation->setChecked(true);
+    ui.actionAILevel->setText("AI等级："+QString::number(aiLevel));
 
     connect(ui.actionNewGame, SIGNAL(triggered()), this, SLOT(newGame()));
     connect(ui.actionEndGame, SIGNAL(triggered()), this, SLOT(endGame()));
@@ -66,6 +64,7 @@ void GameWindow::initView()
     connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui.actionGameRule, SIGNAL(triggered()), this, SLOT(showRule()));
     connect(ui.actionAIMode, SIGNAL(triggered()), this, SLOT(setAi()));
+    connect(ui.actionAILevel, SIGNAL(triggered()), this, SLOT(setAiLevel()));
     connect(ui.actionClassic, SIGNAL(triggered()), this, SLOT(setClassic()));
     connect(ui.actionAnimation, SIGNAL(triggered()), this, SLOT(setAnimation()));
 
@@ -181,9 +180,11 @@ int GameWindow::getGameState()
 
 void GameWindow::showSuccessResult()
 {
-    if (ui.actionAIMode->isChecked()) {
-        newGame();
-    }else if (QMessageBox::Yes == QMessageBox::question(this, "2048", "你已经成功通关！是否再来一次？", QMessageBox::Yes, QMessageBox::No)) {
+    //if (ui.actionAIMode->isChecked()) {
+    //    newGame();
+    //}else 
+    ui.actionAIMode->setChecked(false);
+    if (QMessageBox::Yes == QMessageBox::question(this, "2048", "你已经成功通关！是否再来一次？", QMessageBox::Yes, QMessageBox::No)) {
         GameUI::listener->onFuncControl(START);
     }
 }
@@ -233,7 +234,6 @@ void GameWindow::setAi()
         GameUI::listener->onFuncControl(ENABLEAI);
         if (state == GAMING)
             emit getNextMove(matrix,1);
-
     } else {
         GameUI::listener->onFuncControl(DISABLEAI);
     }
@@ -254,7 +254,17 @@ void GameWindow::setClassic()
 
 void GameWindow::showRule()
 {
-    QMessageBox::information(this, "游戏规则", "balabala...", QMessageBox::Yes);
+    QMessageBox::information(this, "游戏规则", "游戏开始，在4X4的棋盘上随机出现两个数字，出现的数字仅可能为2或4；玩家可以选择上下左右四个方向，若棋盘内的数字出现位移或合并，视为有效移动；玩家选择的方向上若有相同的数字则合并，每次有效移动可以同时合并，但不可以连续合并；合并所得的所有新生成数字相加即为该步的有效得分；玩家选择的方向行或列前方有空格则出现位移；每有效移动一步，棋盘的空位 (无数字处)随机出现一个数字 (依然可能为2或4)；棋盘被数字填满，无法进行有效移动，判负，游戏结束；棋盘上出现2048，判胜。", QMessageBox::Yes);
+}
+
+void GameWindow::setAiLevel()
+{
+    bool bRet = false;
+    int aiLevel1 = QInputDialog::getInt(this, "设置AI", "请输入模拟次数（1~100）：", aiLevel,1,100,1,&bRet);
+    if (bRet) {
+        aiLevel = aiLevel1;
+        ui.actionAILevel->setText("AI等级：" + QString::number(aiLevel));
+    }
 }
 
 void GameWindow::animationEnded()
@@ -263,16 +273,18 @@ void GameWindow::animationEnded()
     {
         if(state==GAMING)
         {
-            emit getNextMove(matrix, 50);
+            emit getNextMove(matrix, aiLevel);
         }
     }
 }
 
 void GameWindow::showFailResult()
 {
-    if (ui.actionAIMode->isChecked()) {
+    /*if (ui.actionAIMode->isChecked()) {
         newGame();
-    }else if (QMessageBox::Yes == QMessageBox::question(this, "2048", "你已经无路可走啦！是否重试？", QMessageBox::Yes, QMessageBox::No)) {
+    }else */
+    ui.actionAIMode->setChecked(false);
+    if (QMessageBox::Yes == QMessageBox::question(this, "2048", "你已经无路可走啦！是否重试？", QMessageBox::Yes, QMessageBox::No)) {
         GameUI::listener->onFuncControl(START);
     }
 }

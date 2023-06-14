@@ -3,7 +3,11 @@
 
 PyObject* Ai2048::initPython()
 {
-	Py_SetPythonHome(L"E:\\CODE\\Project\\2048\\python\\");
+	//先获得py文件所在的路径，必须要绝对路径
+	QString path = QDir::currentPath();
+	path = path.replace("\\", "/");
+	QString python = path + "/../python/";
+	Py_SetPythonHome(python.toStdWString().c_str());
 	Py_Initialize();
 	if (!Py_IsInitialized())
 	{
@@ -11,16 +15,15 @@ PyObject* Ai2048::initPython()
 		PyErr_Print();	//打印错误
 		return nullptr;
 	}
-	//先获得py文件所在的路径，必须要绝对路径
-	QString path = QDir::currentPath();
-	path = path.replace("\\", "/");
 	//qDebug() << path;
-	path = "sys.path.append('" + path + "/pycode" + "')";
-	QByteArray temp = path.toLocal8Bit();
+	QString pycode = "sys.path.append('" + path + "/pycode" + "')";
+	QByteArray temp = pycode.toLocal8Bit();
 	//再设置python运行路径
 	PyRun_SimpleString("import sys");
 	PyRun_SimpleString(temp.data());
-	PyRun_SimpleString("sys.path.append('E:\\CODE\\Project\\2048\\python\\Lib\\site-packages')");
+	QString pythonLib = "sys.path.append('"+path+"/../python/Lib/site-packages')";
+	temp = pythonLib.toLocal8Bit();
+	PyRun_SimpleString(temp.data());
 	//导入模块
 	PyObject* pModule = PyImport_ImportModule("main");
 	pythonModule = pModule;

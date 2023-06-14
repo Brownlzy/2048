@@ -135,7 +135,7 @@ void Matrix::printToConsole()
 	qDebug() << "";
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			line.append(QString::number(matrix[i][j])+"\t\t");
+			line.append(QString::number(matrix[i][j])+"\t");
 		}
 		qDebug().noquote() << line;
 		line = "";

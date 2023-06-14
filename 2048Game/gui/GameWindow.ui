@@ -40,10 +40,6 @@
     </property>
     <addaction name="actionNewGame"/>
     <addaction name="separator"/>
-    <addaction name="actionAIMode"/>
-    <addaction name="actionClassic"/>
-    <addaction name="actionAnimation"/>
-    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menu_2">
@@ -53,7 +49,18 @@
     <addaction name="actionGameRule"/>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuSetting">
+    <property name="title">
+     <string>设置</string>
+    </property>
+    <addaction name="actionAIMode"/>
+    <addaction name="actionClassic"/>
+    <addaction name="actionAnimation"/>
+    <addaction name="separator"/>
+    <addaction name="actionAILevel"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menuSetting"/>
    <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -104,6 +111,11 @@
    </property>
    <property name="text">
     <string>经典模式</string>
+   </property>
+  </action>
+  <action name="actionAILevel">
+   <property name="text">
+    <string>AI等级</string>
    </property>
   </action>
  </widget>

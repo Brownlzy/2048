@@ -7,8 +7,9 @@
 
 class Operate
 { 
-public:
+protected:
 	std::vector<int> vec;
+public:
 	Operate(std::vector<int> vector){vec = vector;}
 	virtual OperateMethod getMethod()=0;
 	virtual std::vector<int> getPoint1()=0;
