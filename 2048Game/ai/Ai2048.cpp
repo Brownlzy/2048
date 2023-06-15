@@ -1,9 +1,9 @@
-#include "Ai2048.h"
+ï»¿#include "Ai2048.h"
 #include <QDir>
 
 PyObject* Ai2048::initPython()
 {
-	//ÏÈ»ñµÃpyÎÄ¼þËùÔÚµÄÂ·¾¶£¬±ØÐëÒª¾ø¶ÔÂ·¾¶
+	//ï¿½È»ï¿½ï¿½pyï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Úµï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 	QString path = QDir::currentPath();
 	path = path.replace("\\", "/");
 	QString python = path + "/../python/";
@@ -12,19 +12,19 @@ PyObject* Ai2048::initPython()
 	if (!Py_IsInitialized())
 	{
 		printf("error!");
-		PyErr_Print();	//´òÓ¡´íÎó
+		PyErr_Print();	//ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½
 		return nullptr;
 	}
 	//qDebug() << path;
 	QString pycode = "sys.path.append('" + path + "/pycode" + "')";
 	QByteArray temp = pycode.toLocal8Bit();
-	//ÔÙÉèÖÃpythonÔËÐÐÂ·¾¶
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½pythonï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 	PyRun_SimpleString("import sys");
 	PyRun_SimpleString(temp.data());
 	QString pythonLib = "sys.path.append('"+path+"/../python/Lib/site-packages')";
 	temp = pythonLib.toLocal8Bit();
 	PyRun_SimpleString(temp.data());
-	//µ¼ÈëÄ£¿é
+	//ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 	PyObject* pModule = PyImport_ImportModule("main");
 	pythonModule = pModule;
 	return pModule;
@@ -32,8 +32,13 @@ PyObject* Ai2048::initPython()
 
 void Ai2048::releasePython()
 {
-	//½áÊø£¬ÊÍ·Åpython
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½python
 	Py_Finalize();
+}
+
+void Ai2048::init()
+{
+	AI a;
 }
 
 Direction Ai2048::getDirection()
@@ -54,20 +59,58 @@ Ai2048::~Ai2048()
 	releasePython();
 }
 
+int Ai2048::getBestMove(Matrix* mat)
+{
+	int** array = new int* [4];
+	for (int i = 0; i < 4; ++i) {
+		array[i] = new int[4];
+	}
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			array[i][j] = mat->getNumberIn(i, j);
+		}
+	}
+	int result = a.play_game(array)+1;
+	if (result)
+	{
+		switch (result)
+		{
+		case 1:
+			dir = UP;
+			break;
+		case 2:
+			dir = DOWN;
+			break;
+		case 3:
+			dir = LEFT;
+			break;
+		case 4:
+			dir = RIGHT;
+			break;
+		default:
+			dir = NONE;
+			break;
+		}
+		emit sendResult(result);
+		return result;
+	}
+}
+
 int Ai2048::getBestMove(Matrix * mat, int n)
 {
 	PyObject* pFunc = PyObject_GetAttrString(pythonModule, "get_next_best_move2");
 	if (pFunc)
 	{
-		//´´½¨²ÎÊýÁÐ±í
-		PyObject* args = PyTuple_New(17);//¶¨ÒåÒ»¸öpython±äÁ¿
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+		PyObject* args = PyTuple_New(17);//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½pythonï¿½ï¿½ï¿½ï¿½
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++)
 			{
-				PyTuple_SetItem(args, i * 4 + j, PyLong_FromLong(mat->getNumberIn(i, j)));// ±äÁ¿¸ñÊ½×ª»»³Épython¸ñÊ½
+				PyTuple_SetItem(args, i * 4 + j, PyLong_FromLong(mat->getNumberIn(i, j)));// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½×ªï¿½ï¿½ï¿½ï¿½pythonï¿½ï¿½Ê½
 			}
 		}
-		PyTuple_SetItem(args, 16, PyLong_FromLong(n));// ±äÁ¿¸ñÊ½×ª»»³Épython¸ñÊ½
+		PyTuple_SetItem(args, 16, PyLong_FromLong(n));// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½×ªï¿½ï¿½ï¿½ï¿½pythonï¿½ï¿½Ê½
 
 		PyObject* result = PyObject_CallObject(pFunc, args);
 		if (result)
