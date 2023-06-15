@@ -33,6 +33,11 @@ void Ai2048::releasePython()
 	Py_Finalize();
 }
 
+void Ai2048::init()
+{
+	AI a;
+}
+
 Direction Ai2048::getDirection()
 {
 	Direction temp = dir;
@@ -49,6 +54,44 @@ Ai2048::Ai2048(QObject *parent)
 Ai2048::~Ai2048()
 {
 	releasePython();
+}
+
+int Ai2048::getBestMove(Matrix* mat)
+{
+	int** array = new int* [4];
+	for (int i = 0; i < 4; ++i) {
+		array[i] = new int[4];
+	}
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			array[i][j] = mat->getNumberIn(i, j);
+		}
+	}
+	int result = a.play_game(array)+1;
+	if (result)
+	{
+		switch (result)
+		{
+		case 1:
+			dir = UP;
+			break;
+		case 2:
+			dir = DOWN;
+			break;
+		case 3:
+			dir = LEFT;
+			break;
+		case 4:
+			dir = RIGHT;
+			break;
+		default:
+			dir = NONE;
+			break;
+		}
+		emit sendResult(result);
+		return result;
+	}
 }
 
 int Ai2048::getBestMove(Matrix * mat, int n)
