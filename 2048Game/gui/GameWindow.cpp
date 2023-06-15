@@ -20,7 +20,8 @@ GameWindow::GameWindow(QWidget* parent)
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
     connect(thread, &QThread::finished, ai, &Ai2048::deleteLater);
     // 主线程发送信号->线程对象启动run函数
-    connect(this, &GameWindow::getNextMove, ai, &Ai2048::getBestMove);
+    connect(this, &GameWindow::getNextMove1, ai, &Ai2048::getBestMove1);
+    connect(this, &GameWindow::getNextMove2, ai, &Ai2048::getBestMove2);
     // 接收线程实体运行结束发送的信号，在回调里quit，quit之后会接收到finished，然后再根据finished消息进一步操作
     connect(ai, &Ai2048::sendResult, this, &GameWindow::keyPress);
 
@@ -57,6 +58,7 @@ void GameWindow::initView()
     ui.actionClassic->setChecked(true);
     ui.actionAnimation->setChecked(true);
     ui.actionAILevel->setText("AI等级："+QString::number(aiLevel));
+    ui.actionAIa->setChecked(true);
 
     connect(ui.actionNewGame, SIGNAL(triggered()), this, SLOT(newGame()));
     connect(ui.actionEndGame, SIGNAL(triggered()), this, SLOT(endGame()));
@@ -64,6 +66,8 @@ void GameWindow::initView()
     connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui.actionGameRule, SIGNAL(triggered()), this, SLOT(showRule()));
     connect(ui.actionAIMode, SIGNAL(triggered()), this, SLOT(setAi()));
+    connect(ui.actionAIa, SIGNAL(triggered()), this, SLOT(setAi1()));
+    connect(ui.actionAIb, SIGNAL(triggered()), this, SLOT(setAi2()));
     connect(ui.actionAILevel, SIGNAL(triggered()), this, SLOT(setAiLevel()));
     connect(ui.actionClassic, SIGNAL(triggered()), this, SLOT(setClassic()));
     connect(ui.actionAnimation, SIGNAL(triggered()), this, SLOT(setAnimation()));
@@ -195,12 +199,21 @@ void GameWindow::newGame()
         GameUI::listener->onFuncControl(END);
     }
     GameUI::listener->onFuncControl(START);
-    //if (ui.actionAIMode->isChecked())
 }
 
 void GameWindow::endGame()
 {
     GameUI::listener->onFuncControl(END);
+}
+
+void GameWindow::askAi()
+{
+    if (ui.actionAIa->isChecked()) {
+        emit getNextMove1(matrix,aiLevel);
+    }
+    else if (ui.actionAIb->isChecked()){
+        emit getNextMove2(matrix);
+    }
 }
 
 void GameWindow::quit()
@@ -231,11 +244,8 @@ void GameWindow::closeEvent(QCloseEvent* event)
 void GameWindow::setAi()
 {
     if (ui.actionAIMode->isChecked()) {
-        GameUI::listener->onFuncControl(ENABLEAI);
         if (state == GAMING)
-            emit getNextMove(matrix,1);
-    } else {
-        GameUI::listener->onFuncControl(DISABLEAI);
+            askAi();
     }
 }
 
@@ -273,9 +283,20 @@ void GameWindow::animationEnded()
     {
         if(state==GAMING)
         {
-            emit getNextMove(matrix, aiLevel);
+            askAi();
         }
     }
+}
+
+void GameWindow::setAi1()
+{
+    ui.actionAIa->setChecked(true);
+    ui.actionAIb->setChecked(false);
+}
+void GameWindow::setAi2()
+{
+    ui.actionAIb->setChecked(true);
+    ui.actionAIa->setChecked(false);
 }
 
 void GameWindow::showFailResult()

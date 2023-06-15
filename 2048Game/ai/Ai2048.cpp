@@ -38,7 +38,7 @@ void Ai2048::releasePython()
 
 void Ai2048::init()
 {
-	AI a;
+	a=new AI();
 }
 
 Direction Ai2048::getDirection()
@@ -52,6 +52,7 @@ Ai2048::Ai2048(QObject *parent)
 	: QObject(parent)
 {
 	initPython();
+	init();
 }
 
 Ai2048::~Ai2048()
@@ -59,8 +60,7 @@ Ai2048::~Ai2048()
 	releasePython();
 }
 
-int Ai2048::getBestMove(Matrix* mat)
-{
+int Ai2048::getBestMove2(Matrix* mat) {
 	int** array = new int* [4];
 	for (int i = 0; i < 4; ++i) {
 		array[i] = new int[4];
@@ -71,7 +71,7 @@ int Ai2048::getBestMove(Matrix* mat)
 			array[i][j] = mat->getNumberIn(i, j);
 		}
 	}
-	int result = a.play_game(array)+1;
+	int result = a->play_game(array) + 1;
 	if (result)
 	{
 		switch (result)
@@ -96,10 +96,9 @@ int Ai2048::getBestMove(Matrix* mat)
 		return result;
 	}
 }
-
-int Ai2048::getBestMove(Matrix * mat, int n)
+int Ai2048::getBestMove1(Matrix * mat, int n)
 {
-	PyObject* pFunc = PyObject_GetAttrString(pythonModule, "get_next_best_move2");
+PyObject* pFunc = PyObject_GetAttrString(pythonModule, "get_next_best_move2");
 	if (pFunc)
 	{
 		//���������б�

@@ -50,6 +50,7 @@ private:
     void initView();
     void showSuccessResult();
     void showFailResult();
+    void askAi();
 
 public slots:
     void keyPressEvent(QKeyEvent* e);
@@ -64,7 +65,10 @@ public slots:
     void setClassic();
     void showRule();
     void animationEnded();
+    void setAi1();
+    void setAi2();
 
 signals:
-    void getNextMove(Matrix* mat, int n);
+    void getNextMove1(Matrix* mat, int n);
+    void getNextMove2(Matrix* mat);
 };

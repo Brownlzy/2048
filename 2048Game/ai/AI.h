@@ -389,17 +389,17 @@ public:
 
     float score_toplevel_move(board_t board, int move) {
         float res;
-        struct timeval start, finish;
+        //struct timeval start, finish;
         double elapsed;
         eval_state state;
         state.depth_limit = std::max(3, count_distinct_tiles(board) - 2);
 
-        gettimeofday(&start, NULL);
+        //gettimeofday(&start, NULL);
         res = _score_toplevel_move(state, board, move);
-        gettimeofday(&finish, NULL);
+        //gettimeofday(&finish, NULL);
 
-        elapsed = (finish.tv_sec - start.tv_sec);
-        elapsed += (finish.tv_usec - start.tv_usec) / 1000000.0;
+        //elapsed = (finish.tv_sec - start.tv_sec);
+        //elapsed += (finish.tv_usec - start.tv_usec) / 1000000.0;
 
         printf("Move %d: result %f: eval'd %ld moves (%d cache hits, %d cache size) in %.2f seconds (maxdepth=%d)\n", move, res,
             state.moves_evaled, state.cachehits, (int)state.trans_table.size(), elapsed, state.maxdepth);
